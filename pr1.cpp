@@ -143,7 +143,7 @@ public:
 
 	virtual double area() const = 0;
 
-	void displayInfo() const 
+	void displayInfo() const
 	{
 		cout << "Фигура: " << type << endl;
 		cout << "Площадь: " << area() << endl;
@@ -158,7 +158,7 @@ private:
 public:
 	Rectangle(int w, int l) : Shape("Rectangle") {}
 
-	double area() const override 
+	double area() const override
 	{
 		return width * length;
 	}
@@ -171,7 +171,7 @@ private:
 public:
 	Circle(int r) : Shape("Circle") {}
 
-	double area() const override 
+	double area() const override
 	{
 		return 3.14159 * radius * radius;
 	}
@@ -201,7 +201,7 @@ public:
 		y = y;
 	}
 
-	void displayInfo() 
+	void displayInfo()
 	{
 		cout << "Point 1: " << x << "Point 2: " << y << endl;
 	}
@@ -222,7 +222,7 @@ private:
 	int accountNumber;
 
 public:
-	BankAccount(int b, int a) 
+	BankAccount(int b, int a)
 	{
 		balance = b;
 		accountNumber = a;
@@ -230,12 +230,12 @@ public:
 
 	void deposit(int amount)
 	{
-		if (amount > 0) 
+		if (amount > 0)
 		{
 			balance += amount;
 			cout << "Сумма внесена: " << balance << endl;
 		}
-		else 
+		else
 		{
 			cout << "Сумма должна быть положительной" << endl;
 		}
@@ -243,7 +243,7 @@ public:
 
 	void withdraw(int amount)
 	{
-		if (amount > 0 && balance > 0) 
+		if (amount > 0 && balance > 0)
 		{
 			balance -= amount;
 		}
@@ -308,36 +308,197 @@ int main() {
 	Student s1("Иван");
 	Student s2("Мария");
 
-	cout << "До изменения:" << endl;
-	cout << "Student 1: " << s1.getName() << endl;
-	cout << "Student 2: " << s2.getName() << endl;
-
 	changeName(s1, "Алексей");
-
-	cout << "После изменения:" << endl;
-	cout << "Student 1: " << s1.getName() << endl;
 
 	return 0;
 }
 
+
+#include <iostream>
+#include <string>
+using namespace std;
 
 class Animal {
 private:
 	string name;
 
 public:
-	Animal(string n) {
-		name = n;
+	Animal(string n) {}
+
+	string getName() const {
+		return name;
 	}
 };
 
-class Dog {
+class Dog : public Animal {
 private:
 	string breed;
 
 public:
-	Dog(string b) {
-		breed = b;
+	Dog(string n, string b) : Animal(n), breed(b) {}
+
+	string getBreed() const {
+		return breed;
 	}
 };
 
+int main() {
+	Dog d1("Тузик", "Овчарка");
+
+	return 0;
+}
+
+
+#include <iostream>
+using namespace std;
+
+class Rectangle {
+private:
+	double length;
+	double width;
+
+public:
+	Rectangle(double l, double w) : length(l), width(w) {}
+
+	double area() const {
+		return length * width;
+	}
+
+	double perimeter() const {
+		return 2 * (length + width);
+	}
+};
+
+int main() {
+	Rectangle r(5.0, 3.0);
+
+	cout << "Площадь: " << r.area() << endl;
+	cout << "Периметр: " << r.perimeter() << endl;
+
+	return 0;
+}
+
+
+#include <iostream>
+using namespace std;
+
+class Counter {
+private:
+	int count;
+
+public:
+	Counter() : count(0) {}
+
+	void increment() {
+		count++;
+	}
+	int getCount() const {
+		return count;
+	}
+};
+
+int main() {
+	Counter c;
+
+	c.increment();
+	c.increment();
+	c.increment();
+
+	cout << "Значение счетчика: " << c.getCount() << endl;
+
+	return 0;
+}
+
+
+#include <iostream>
+using namespace std;
+
+class Vehicle {
+public:
+	virtual ~Vehicle() {}
+	virtual void fuelEfficiency() const {
+		cout << "Общая эффективность топлива транспортного средства." << endl;
+	}
+};
+
+class Car : public Vehicle {
+public:
+	void fuelEfficiency() const override {
+		cout << "Car: расход топлива 15 км/л." << endl;
+	}
+};
+
+class Truck : public Vehicle {
+public:
+	void fuelEfficiency() const override {
+		cout << "Truck: расход топлива 8 км/л." << endl;
+	}
+};
+
+int main() {
+	Vehicle* vehicles[2];
+
+	vehicles[0] = new Car();
+	vehicles[1] = new Truck();
+
+	for (int i = 0; i < 2; i++) {
+		vehicles[i]->fuelEfficiency();
+	}
+
+	for (int i = 0; i < 2; i++) {
+		delete vehicles[i];
+	}
+
+	return 0;
+}
+
+
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+class Book {
+private:
+	string title;
+	string author;
+
+public:
+	Book(const string& t, const string& a) : title(t), author(a) {}
+
+	void print() const {
+		cout << "Книга: " << title << ", автор: " << author << endl;
+	}
+};
+
+class Library {
+private:
+	vector<Book> books;
+
+public:
+	void addBook(const Book& b) {
+		books.push_back(b);
+	}
+
+	void printBooks() const {
+		for (const auto& book : books) {
+			book.print();
+		}
+	}
+};
+
+int main() {
+	Library lib;
+
+	Book b1("Война и мир", "Лев Толстой");
+	Book b2("Мастер и Маргарита", "Михаил Булгаков");
+	Book b3("1984", "Джордж Оруэлл");
+
+	lib.addBook(b1);
+	lib.addBook(b2);
+	lib.addBook(b3);
+
+	lib.printBooks();
+
+	return 0;
+}
