@@ -121,3 +121,135 @@ int main()
     arr.fill();
     arr.print();
 }
+
+
+#include <iostream>
+using namespace std;
+
+class Car {
+public:
+    string model;
+
+    Car(const string& m) : model(m) {
+        cout << "Car created " << model << endl;
+    }
+
+    ~Car() {
+        cout << "Car destroyed " << model << endl;
+    }
+};
+
+int main() {
+    Car c1("LADA");
+    Car c2("Toyota");
+    Car c3("BMW");
+
+    return 0;
+}
+
+
+#include <iostream>
+using namespace std;
+
+class Matrix {
+private:
+    int rows;
+    int cols;
+    int* data;
+
+public:
+    Matrix(int r, int c) : rows(r), cols(c) {
+        data = new int[rows * cols];
+    }
+
+    ~Matrix() {
+        delete[] data;
+    }
+
+    void fill() {
+        std::cout << "Enter array:\n";
+        for (int i = 0; i < 10; ++i) {
+            std::cin >> data[i];
+        }
+    }
+
+    void print() const {
+        std::cout << "Array: ";
+        for (int i = 0; i < 10; ++i) {
+            std::cout << data[i] << ' ';
+        }
+        std::cout << std::endl;
+    }
+};
+
+int main()
+{
+    Matrix m(4, 8);
+    m.fill();
+    m.print();
+}
+
+
+
+#include <iostream>
+using namespace std;
+
+class BankAccount {
+public:
+    string owner;
+    int balance;
+
+    BankAccount() {
+        owner = "0";
+        balance = 0;
+    }
+
+    BankAccount(string a, int b) {
+        owner = a;
+        balance = b;
+    }
+
+    void deposit() {
+        int amount;
+        cout << "Enter sum: ";
+        cin >> amount;
+        if (amount > 0) {
+            balance += amount;
+            cout << "Ok: " << amount << ". Balance: " << balance << endl;
+        }
+        else {
+            cout << "No" << endl;
+        }
+    }
+
+    void withdraw() {
+        int amount;
+        cout << "Enter sum: ";
+        cin >> amount;
+        if (amount > 0 && amount <= balance) {
+            balance -= amount;
+            cout << "Ok: " << amount << ". Balance: " << balance << endl;
+        }
+        else {
+            cout << "No" << endl;
+        }
+    }
+
+    ~BankAccount() {
+        cout << "Account closed" << endl;
+        
+    }
+
+
+    void print() {
+        cout << "Owner: " << owner << " Balance: " << balance << endl;
+    }
+};
+
+int main()
+{
+    BankAccount b1("Valeri", 2000);
+    b1.deposit();
+    b1.withdraw();
+    b1.print();
+}
