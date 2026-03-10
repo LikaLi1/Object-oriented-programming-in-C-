@@ -86,6 +86,83 @@ int main()
 #include <iostream>
 using namespace std;
 
+class Book {
+private:
+    string title;
+    int pages;
+
+public:
+    Book(string t, int p) : title(t), pages(p) {
+        title = t;
+        pages = p;
+    }
+
+    void print() {
+        cout << "Title: " << title << " Pages: " << pages << endl;
+    }
+};
+
+int main()
+{
+    Book b1("Kolobok", 10);
+    b1.print();
+}
+
+
+#include <iostream>
+using namespace std;
+
+class Number {
+public:
+    int value;
+
+    Number(int v) {
+        value = v;
+    }
+
+    Number(const Number& n) {
+        value = n.value;
+    }
+
+    void print() {
+        cout << "Value: " << value << endl;
+    }
+};
+
+int main()
+{
+    Number n1(20);
+    n1.print();
+}
+
+
+#include <iostream>
+using namespace std;
+
+class Test
+{
+public:
+    Test()
+    {
+        cout << "Object created\n";
+    }
+
+    ~Test()
+    {
+        cout << "Object destroyed\n";
+    }
+};
+
+int main() {
+    {
+        Test obj;
+    }
+}
+
+
+#include <iostream>
+using namespace std;
+
 class Array {
 private:
     int* data;
@@ -143,8 +220,6 @@ int main() {
     Car c1("LADA");
     Car c2("Toyota");
     Car c3("BMW");
-
-    return 0;
 }
 
 
