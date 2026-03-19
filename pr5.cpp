@@ -423,3 +423,481 @@ int main()
         enemys[i]->attack();
     }
 }
+
+
+#include <iostream>
+using namespace std;
+
+class Account
+{
+public:
+    virtual void calculateInterest() = 0;
+    virtual ~Account() {}
+};
+
+class SavingsAccount : public Account
+{
+public:
+    void calculateInterest() override
+    {
+        cout << "SavingsAccount" << endl;
+    }
+};
+
+class FixedDeposit : public Account
+{
+public:
+    void calculateInterest() override
+    {
+        cout << "FixedDeposit" << endl;
+    }
+};
+
+int main()
+{
+    Account* accounts[2];
+
+    SavingsAccount s;
+    FixedDeposit f;
+
+    accounts[0] = &s;
+    accounts[1] = &f;
+
+    for (int i = 0; i < 2; i++)
+    {
+        accounts[i]->calculateInterest();
+    }
+}
+
+
+#include <iostream>
+using namespace std;
+
+class Shape
+{
+public:
+    virtual void area() = 0;
+    virtual void perimeter() = 0;
+    virtual ~Shape() {}
+};
+
+class Rectangle : public Shape
+{
+    int length, width;
+
+public:
+    Rectangle(int l, int w) : length(l), width(w) {}
+
+    void area() override
+    {
+        cout << "Rectangle area: " << length * width << endl;
+    }
+    void perimeter() override
+    {
+        cout << "Rectangle perimeter: " << 2 * (length + width) << endl;
+    }
+};
+
+class Circle : public Shape
+{
+    int radius;
+
+public:
+    Circle(int r) : radius(r) {}
+
+    void area() override
+    {
+        cout << "Circle area: " << 3.14159 * radius * radius << endl;
+    }
+    void perimeter() override
+    {
+        cout << "Circle perimeter: " << 2 * 3.14159 * radius << endl;
+    }
+};
+
+int main()
+{
+    Shape* shapes[2];
+
+    Rectangle r(5, 6);
+    Circle c(5);
+
+    shapes[0] = &r;
+    shapes[1] = &c;
+
+    for (int i = 0; i < 2; i++)
+    {
+        shapes[i]->area();
+        shapes[i]->perimeter();
+    }
+}
+
+
+#include <iostream>
+using namespace std;
+
+class Media
+{
+public:
+    virtual void play() = 0;
+    virtual ~Media() {}
+};
+
+class Audio : public Media
+{
+public:
+    void play() override
+    {
+        cout << "Audio play" << endl;
+    }
+};
+
+class Video : public Media
+{
+public:
+    void play() override
+    {
+        cout << "Video play" << endl;
+    }
+};
+
+int main()
+{
+    Media* medias[2];
+
+    Audio a;
+    Video v;
+
+    medias[0] = &a;
+    medias[1] = &v;
+
+    for (int i = 0; i < 2; i++)
+    {
+        medias[i]->play();
+    }
+}
+
+
+#include <iostream>
+using namespace std;
+
+class Notification
+{
+public:
+    virtual void notify() = 0;
+    virtual ~Notification() {}
+};
+
+class Push : public Notification
+{
+public:
+    void notify() override
+    {
+        cout << "You have received a push notification." << endl;
+    }
+};
+
+class EmailNotification : public Notification
+{
+public:
+    void notify() override
+    {
+        cout << "You have received a notification by email" << endl;
+    }
+};
+
+int main()
+{
+    Notification* notifications[2];
+
+    Push p;
+    EmailNotification e;
+
+    notifications[0] = &p;
+    notifications[1] = &e;
+
+    for (int i = 0; i < 2; i++)
+    {
+        notifications[i]->notify();
+    }
+}
+
+
+#include <iostream>
+using namespace std;
+
+class Robot
+{
+public:
+    virtual void work() = 0;
+    virtual ~Robot() {}
+};
+
+class CleanerRobot : public Robot
+{
+public:
+    void work() override
+    {
+        cout << "This robot washes the floor" << endl;
+    }
+};
+
+class BuilderRobot : public Robot
+{
+public:
+    void work() override
+    {
+        cout << "This robot builds" << endl;
+    }
+};
+
+int main()
+{
+    Robot* robots[2];
+
+    CleanerRobot c;
+    BuilderRobot b;
+
+    robots[0] = &c;
+    robots[1] = &b;
+
+    for (int i = 0; i < 2; i++)
+    {
+        robots[i]->work();
+    }
+}
+
+
+#include <iostream>
+using namespace std;
+
+class Flyable
+{
+public:
+    virtual void Fly() = 0;
+    virtual ~Flyable() {}
+};
+
+class Swimmable
+{
+public:
+    virtual void Swim() = 0;
+    virtual ~Swimmable() {}
+};
+
+class Duck : public Flyable, public Swimmable
+{
+public:
+    void Fly() override
+    {
+        cout << "Duck is flying" << endl;
+    }
+    void Swim() override
+    {
+        cout << "Duck is swimming" << endl;
+    }
+};
+
+int main()
+{
+    Duck d;
+
+    d.Fly();
+    d.Swim();
+}
+
+
+#include <iostream>
+using namespace std;
+
+class Logger
+{
+public:
+    virtual void log() = 0;
+    virtual ~Logger() {}
+};
+
+class FileLogger : public Logger
+{
+public:
+    void log() override
+    {
+        cout << "FileLogger" << endl;
+    }
+};
+
+class ConsoleLogger : public Logger
+{
+public:
+    void log() override
+    {
+        cout << "ConsoleLogger" << endl;
+    }
+};
+
+int main()
+{
+    Logger* loggers[2];
+
+    FileLogger f;
+    ConsoleLogger c;
+
+    loggers[0] = &f;
+    loggers[1] = &c;
+
+    for (int i = 0; i < 2; i++)
+    {
+        loggers[i]->log();
+    }
+}
+
+
+#include <iostream>
+using namespace std;
+
+class Delivery
+{
+public:
+    virtual void deliver() = 0;
+    virtual ~Delivery() {}
+};
+
+class Courier : public Delivery
+{
+public:
+    void deliver() override
+    {
+        cout << "Courier" << endl;
+    }
+};
+
+class Drone : public Delivery
+{
+public:
+    void deliver() override
+    {
+        cout << "Drone" << endl;
+    }
+};
+
+int main()
+{
+    Delivery* deliverys[2];
+
+    Courier c;
+    Drone d;
+
+    deliverys[0] = &c;
+    deliverys[1] = &d;
+
+    for (int i = 0; i < 2; i++)
+    {
+        deliverys[i]->deliver();
+    }
+}
+
+
+#include <iostream>
+using namespace std;
+
+class Course
+{
+public:
+    virtual void start() = 0;
+    virtual ~Course() {}
+};
+
+class OnlineCourse : public Course
+{
+public:
+    void start() override
+    {
+        cout << "OnlineCourse" << endl;
+    }
+};
+
+class OfflineCourse : public Course
+{
+public:
+    void start() override
+    {
+        cout << "OfflineCourse" << endl;
+    }
+};
+
+int main()
+{
+    Course* courses[2];
+
+    OnlineCourse on;
+    OfflineCourse of;
+
+    courses[0] = &on;
+    courses[1] = &of;
+
+    for (int i = 0; i < 2; i++)
+    {
+        courses[i]->start();
+    }
+}
+
+
+#include <iostream>
+using namespace std;
+
+class Product
+{
+public:
+    virtual double getPrice() const = 0;
+    virtual ~Product() {}
+};
+
+class Book : public Product
+{
+    double price;
+public:
+    Book(double p) : price(p) {}
+    double getPrice() const override { return price; }
+};
+
+class Electronics : public Product
+{
+    double price;
+public:
+    Electronics(double p) : price(p) {}
+    double getPrice() const override { return price; }
+};
+
+class Clothing : public Product
+{
+    double price;
+public:
+    Clothing(double p) : price(p) {}
+    double getPrice() const override { return price; }
+};
+
+int main()
+{
+    Product* products[3];
+
+    Book b(15.99);
+    Electronics e(249.99);
+    Clothing c(49.99);
+
+    products[0] = &b;
+    products[1] = &e;
+    products[2] = &c;
+
+    double totalPrice = 0;
+
+    for (int i = 0; i < 3; i++)
+    {
+        double price = products[i]->getPrice();
+        cout << "Price of product " << i + 1 << ": " << price << endl;
+        totalPrice += price;
+    }
+
+    cout << "Total price: " << totalPrice << endl;
+
+    return 0;
+}
