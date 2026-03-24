@@ -1,23 +1,23 @@
 #include <iostream>
 using namespace std;
 
-class Author 
+class Author
 {
 public:
 	string firstname;
 
-	Author(string firstname) 
+	Author(string firstname)
 	{
 		this->firstname = firstname;
 	}
 };
 
-class Book 
+class Book
 {
 private:
 	Author* author;
 public:
-	Book(Author* a) 
+	Book(Author* a)
 	{
 		author = a;
 	}
@@ -113,9 +113,9 @@ class School
 private:
 	Teacher* teacher;
 public:
-	School(Teacher* a)
+	School(Teacher* t)
 	{
-		teacher = a;
+		teacher = t;
 	}
 	void show() {
 		cout << "Teacher: " << teacher->firstname << endl;
@@ -124,9 +124,9 @@ public:
 
 int main()
 {
-	Author a("Ben");
-	Book b(&a);
-	b.show();
+	Teacher t("Ben");
+	School s(&t);
+	s.show();
 }
 
 
@@ -358,7 +358,7 @@ class Order
 private:
 	Customer* customer;
 public:
-	Course(Customer* c)
+	Order(Customer* c)
 	{
 		customer = c;
 	}
@@ -371,5 +371,137 @@ int main()
 {
 	Customer c("Lika");
 	Order o(&c);
-	c.show();
+	o.show();
+}
+
+
+#include <iostream>
+using namespace std;
+
+class Battery
+{
+public:
+	void capacity()
+	{
+		cout << "Capacity\n";
+	}
+};
+
+class Smartphone
+{
+private:
+	Battery battery;
+public:
+	void manycapacity()
+	{
+		battery.capacity();
+	}
+};
+
+int main()
+{
+	Smartphone s;
+	s.manycapacity();
+}
+
+
+#include <iostream>
+using namespace std;
+
+class Book
+{
+public:
+	string name;
+
+	Book(string name)
+	{
+		this->name = name;
+	}
+};
+
+class Library
+{
+private:
+	Book* book;
+public:
+	Library(Book* c)
+	{
+		book = c;
+	}
+	void show() {
+		cout << "Book: " << book->name << endl;
+	}
+};
+
+int main()
+{
+	Book b("Lika");
+	Library l(&b);
+	l.show();
+}
+
+
+#include <iostream>
+using namespace std;
+
+class Level
+{
+public:
+	void show()
+	{
+		cout << "Lev\n";
+	}
+};
+
+class Game
+{
+private:
+	Level level;
+public:
+	void manycapacity()
+	{
+		level.show();
+	}
+};
+
+int main()
+{
+	Game g;
+	g.manycapacity();
+}
+
+
+#include <iostream>
+using namespace std;
+
+class Database
+{
+public:
+	string name;
+
+	Database(string name)
+	{
+		this->name = name;
+	}
+};
+
+class Server
+{
+private:
+	Database* database;
+public:
+	Server(Database* d)
+	{
+		database = d;
+	}
+	void show() {
+		cout << "Database: " << database->name << endl;
+	}
+};
+
+int main()
+{
+	Database d("Lika");
+	Server s(&d);
+	s.show();
 }
