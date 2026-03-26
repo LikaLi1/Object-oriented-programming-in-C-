@@ -105,3 +105,30 @@ int main()
 
     cout << distance(p1, p2);
 }
+
+
+#include <iostream>
+using namespace std;
+
+class Multiplier
+{
+private:
+    int TwoMul;
+public:
+    Multiplier(int m) { this->TwoMul = m; }
+
+    friend int mul(Multiplier a, Multiplier b);
+};
+
+int mul(Multiplier a, Multiplier b)
+{
+    return a.TwoMul * b.TwoMul;
+}
+
+int main()
+{
+    Multiplier m1(2);
+    Multiplier m2(50);
+
+    cout << mul(m1, m2);
+}
