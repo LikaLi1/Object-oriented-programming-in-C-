@@ -71,3 +71,181 @@ int main() {
 
     return 0;
 }
+
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+class User
+{
+private:
+    string name;
+    int age;
+public:
+    User(string n, int a) : name(n), age(a) {}
+
+    friend ostream& operator<<(ostream& os, const User& u);
+};
+
+ostream& operator<<(ostream& os, const User& u) {
+    return os << "User: " << u.name << ", Age: " << u.age;
+}
+
+int main() {
+    User u1("Ivan", 30);
+    User u2("Ivan", 28);
+    User u3("Peter", 16);
+
+    cout << u1 << endl;
+    cout << u2 << endl;
+    cout << u3 << endl;
+
+    return 0;
+}
+
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Student
+{
+private:
+    string name;
+    int age;
+public:
+    Student() : name(""), age(0) {}
+
+    friend ostream& operator<<(ostream& os, const Student& s);
+    friend istream& operator>>(istream& is, Student& s);
+};
+
+ostream& operator<<(ostream& os, const Student& s) {
+    return os << "User: " << s.name << ", Age: " << s.age;
+}
+istream& operator>>(istream& is, Student& s) {
+    cout << "Enter name: ";
+    is >> s.name;
+    cout << "Enter age: ";
+    is >> s.age;
+}
+
+int main() {
+    Student s1, s2;
+
+    cout << "S1:" << endl;
+    cin >> s1;
+    cout << "S2" << endl;
+    cin >> s2;
+
+    cout << "Student 1: " << s1 << endl;
+    cout << "Student 2: " << s2 << endl;
+
+    return 0;
+}
+
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Score
+{
+private:
+    int num;
+public:
+    Score(int n) : num(n) {}
+
+    bool operator>(const Score& s) const { return this->num > s.num; }
+    
+    int getNum() const { return num; }
+};
+
+Score Max(const Score s1, const Score s2, const Score s3) {
+    if (s1 > s2 && s1 > s3) {
+        return s1;
+    }
+    else if (s2 > s1 && s2 > s3) {
+        return s2;
+    }
+    else {
+        return s3;
+    }
+}
+
+int main() {
+    Score s1(458);
+    Score s2(896);
+    Score s3(764);
+
+    Score max = Max(s1, s2, s3);
+    cout << "Max score: " << max.getNum() << endl;
+    
+    return 0;
+}
+
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Database
+{
+private:
+    string data;
+public:
+    Database(const string& d) : data(d) {}
+
+    void Info() const {
+        cout << "Database info: " << data << endl;
+    }
+
+    friend class Admin;
+};
+
+class Admin {
+public:
+    void AdminDatabase(const Database& ad) {
+        cout << "Admin database: " << ad.data << endl;
+    }
+};
+
+int main() {
+    Database ad("Server: ");
+    Admin a;
+    
+    a.AdminDatabase(ad);
+
+    return 0;
+}
+
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+class System
+{
+private:
+    int status = 200;
+    string message = "OK";
+
+    friend class Logger;
+};
+
+class Logger {
+public:
+    void log(const System& s) {
+        cout << "Status: " << s.status << ", Message: " << s.message << endl;
+    }
+};
+
+int main() {
+    System s;
+    Logger l;
+    
+    l.log(s);
+
+    return 0;
+}
