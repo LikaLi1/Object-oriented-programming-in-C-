@@ -249,3 +249,112 @@ int main() {
 
     return 0;
 }
+
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Student;
+
+class Teacher {
+public:
+    void showStudentDetails(const Student& s);
+};
+
+class Student {
+private:
+    string name;
+    int age;
+
+public:
+    Student(const string& n, int a) : name(n), age(a) {}
+
+    friend class Teacher;
+};
+
+void Teacher::showStudentDetails(const Student& s) {
+    cout << "Student Name: " << s.name << endl;
+    cout << "Student Age: " << s.age << endl;
+}
+
+int main() {
+    Student s("Alice", 20);
+    Teacher t;
+
+    t.showStudentDetails(s);
+
+    return 0;
+}
+
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+class SecurityManager;
+
+class SecureData {
+private:
+    string secretInfo;
+
+public:
+    SecureData(const string& info) : secretInfo(info) {}
+
+    friend class SecurityManager;
+};
+
+class SecurityManager {
+public:
+    void accessSecureData(const SecureData& sd) {
+        cout << "Accessing secure info: " << sd.secretInfo << endl;
+    }
+};
+
+int main() {
+    SecureData sd("Top Secret Data");
+    SecurityManager sm;
+
+    sm.accessSecureData(sd);
+
+    return 0;
+}
+
+
+#include <iostream>
+using namespace std;
+
+class BankManager;
+
+class Account {
+private:
+    double balance;
+
+public:
+    Account(double initialBalance) : balance(initialBalance) {}
+
+    friend class BankManager;
+};
+
+class BankManager {
+public:
+    void viewBalance(const Account& acc) {
+        cout << "Current balance: " << acc.balance << endl;
+    }
+
+    void changeBalance(Account& acc, double amount) {
+        acc.balance += amount;
+        cout << "Balance updated. New balance: " << acc.balance << endl;
+    }
+};
+
+int main() {
+    Account myAccount(1000.0);
+    BankManager manager;
+
+    manager.viewBalance(myAccount);
+    manager.changeBalance(myAccount, 250.0);
+    manager.viewBalance(myAccount);
+
+    return 0;
+}
