@@ -88,6 +88,12 @@ public:
     virtual ~Transport() {}
 };
 
+class Payment {
+public:
+    virtual void Pay() = 0;
+    virtual ~Payment() {}
+};
+
 class Car : public Transport {
 public:
     void Speed() override {
@@ -99,6 +105,20 @@ class Bike : public Transport {
 public:
     void Speed() override {
         cout << "100m\n";
+    }
+};
+
+class Card : public Payment {
+public:
+    void Pay() override {
+        cout << "Card\n";
+    }
+};
+
+class Cash : public Payment {
+public:
+    void Pay() override {
+        cout << "Cash\n";
     }
 };
 
@@ -115,6 +135,19 @@ public:
     }
 };
 
+class PaymentFactory {
+public:
+    static Payment* createPayment(int type)
+    {
+        if (type == 1) {
+            return new Card();
+        }
+        else if (type == 2) {
+            return new Cash();
+        }
+    }
+};
+
 int main() {
     int type;
     cin >> type;
@@ -127,5 +160,76 @@ int main() {
         delete t;
     }
 
+    Payment* p = nullptr;
+
+    p = PaymentFactory::createPayment(type);
+    if (p) {
+        p->Pay();
+        delete p;
+    }
+
     return 0;
 }
+
+
+#include <iostream>
+using namespace std;
+
+class Document {
+public:
+    virtual void Open() = 0;
+    virtual ~Document() {}
+};
+
+class PDF : public Document {
+public:
+    void Open() override {
+        cout << "PDF\n";
+    }
+};
+
+class DOX : public Document {
+public:
+    void Open() override {
+        cout << "DOX\n";
+    }
+};
+
+class DocumentFactory {
+public:
+    static Document* createDocument(string type) {
+        if (type == "pdf") {
+            return new PDF();
+        }
+        else if (type == "dox") {
+            return new DOX();
+        }
+    }
+};
+
+int main() {
+    string type;
+    cin >> type;
+
+    Document* d = nullptr;
+
+    d = DocumentFactory::createDocument(type);
+    if (d) {
+        d->Open();
+        delete d;
+    }
+
+    return 0;
+}
+
+
+#include <iostream>
+using namespace std;
+
+class Product {
+
+};
+
+class Creator {
+    virtual Product* create() = 0;
+};
