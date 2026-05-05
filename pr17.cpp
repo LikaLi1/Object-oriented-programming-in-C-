@@ -720,3 +720,174 @@ int main()
 
     return 0;
 }
+
+
+#include <iostream>
+#include <vector>
+#include <memory>
+#include <unordered_map>
+#include <string>
+
+class Command {
+public:
+    virtual ~Command() = default;
+    virtual void execute() = 0;
+    virtual std::string name() const = 0;
+};
+
+class MacroCommand : public Command {
+public:
+    void add(std::unique_ptr<Command> cmd) {
+        commands.push_back(std::move(cmd));
+    }
+    void execute() override {
+        for (auto& cmd : commands) {
+            std::cout << "Executing command: " << cmd->name() << std::endl;
+            cmd->execute();
+        }
+    }
+    std::string name() const override {
+        return "MacroCommand";
+    }
+private:
+    std::vector<std::unique_ptr<Command>> commands;
+};
+
+class AttackCommand : public Command {
+public:
+    void execute() override {
+        std::cout << "Attack!" << std::endl;
+    }
+    std::string name() const override {
+        return "attack";
+    }
+};
+
+class HealCommand : public Command {
+public:
+    void execute() override {
+        std::cout << "Heal!" << std::endl;
+    }
+    std::string name() const override {
+        return "heal";
+    }
+};
+
+class DefendCommand : public Command {
+public:
+    void execute() override {
+        std::cout << "Defend!" << std::endl;
+    }
+    std::string name() const override {
+        return "defend";
+    }
+};
+
+// Фабрика команд
+class CommandFactory {
+public:
+    static std::unique_ptr<Command> createCommand(const std::string& cmd) {
+        if (cmd == "attack") return std::make_unique<AttackCommand>();
+        if (cmd == "heal") return std::make_unique<HealCommand>();
+        if (cmd == "defend") return std::make_unique<DefendCommand>();
+        return nullptr;
+    }
+};
+
+// Игровая логика персонажа
+class Player {
+public:
+    void moveUp() { y--; logPosition("Up"); history.push_back(std::make_unique<MoveCommand>(*this, 0, 1)); }
+    void moveDown() { y++; logPosition("Down"); history.push_back(std::make_unique<MoveCommand>(*this, 0, -1)); }
+    void moveLeft() { x--; logPosition("Left"); history.push_back(std::make_unique<MoveCommand>(*this, 1, 0)); }
+    void moveRight() { x++; logPosition("Right"); history.push_back(std::make_unique<MoveCommand>(*this, -1, 0)); }
+    void undo() {
+        if (!history.empty()) {
+            history.pop_back();
+            std::cout << "Undo last move" << std::endl;
+        }
+    }
+    void logPosition(const std::string& dir) {
+        std::cout << "Moved " << dir << " to (" << x << ", " << y << ")" << std::endl;
+    }
+    class Command {
+    public:
+        Command(Player& p, int dx, int dy) : player(p), dx(dx), dy(dy) {}
+        void execute() { player.x += dx; player.y += dy; player.logPosition(""); }
+    private:
+        Player& player;
+        int dx, dy;
+    };
+private:
+    int x = 0;
+    int y = 0;
+    std::vector<std::unique_ptr<Command>> history;
+};
+
+int main() {
+    Player player;
+    std::vector<std::unique_ptr<Command>> commandHistory;
+    MacroCommand macro;
+    std::unordered_map<std::string, std::string> commandsMap = {
+        {"w", "moveUp"},
+        {"s", "moveDown"},
+        {"a", "moveLeft"},
+        {"d", "moveRight"},
+        {"u", "undo"},
+        {"q", "quit"}
+    };
+    bool running = true;
+    while (running) {
+        std::cout << "Enter command (w/s/a/d/u/q or attack/heal/defend): ";
+        std::string input;
+        std::cin >> input;
+
+        if (input == "q") {
+            running = false;
+        }
+        else if (input == "w") {
+            auto cmd = std::make_unique<Player::Command>(player, 0, 1);
+            std::cout << "Executing move up" << std::endl;
+            cmd->execute();
+            commandHistory.push_back(std::move(cmd));
+        }
+        else if (input == "s") {
+            auto cmd = std::make_unique<Player::Command>(player, 0, -1);
+            std::cout << "Executing move down" << std::endl;
+            cmd->execute();
+            commandHistory.push_back(std::move(cmd));
+        }
+        else if (input == "a") {
+            auto cmd = std::make_unique<Player::Command>(player, -1, 0);
+            std::cout << "Executing move left" << std::endl;
+            cmd->execute();
+            commandHistory.push_back(std::move(cmd));
+        }
+        else if (input == "d") {
+            auto cmd = std::make_unique<Player::Command>(player, 1, 0);
+            std::cout << "Executing move right" << std::endl;
+            cmd->execute();
+            commandHistory.push_back(std::move(cmd));
+        }
+        else if (input == "u") {
+            if (!commandHistory.empty()) {
+                commandHistory.pop_back();
+                std::cout << "Undo last action" << std::endl;
+            }
+        }
+        else {
+            auto cmdObj = CommandFactory::createCommand(input);
+            if (cmdObj) {
+                std::cout << "Executing command: " << cmdObj->name() << std::endl;
+                cmdObj->execute();
+                macro.add(std::move(cmdObj));
+            }
+            else {
+                std::cout << "Unknown command" << std::endl;
+            }
+        }
+    }
+    std::cout << "Game over." << std::endl;
+    macro.execute();
+    return 0;
+}
