@@ -496,3 +496,72 @@ int main()
     
     return 0;
 }
+
+
+#include <iostream>
+#include <queue>
+using namespace std;
+
+class Command {
+public:
+    virtual void execute() = 0;
+    virtual ~Command() {}
+};
+
+class Light
+{
+public:
+    void turnOn()
+    {
+        cout << "Turn on\n";
+    }
+
+    void turnOff()
+    {
+        cout << "Turn off\n";
+    }
+};
+
+class LightOnCommand : public Command
+{
+    Light* light;
+
+public:
+    LightOnCommand(Light* l) : light(l) {}
+
+    void execute() override
+    {
+        cout << "Light on\n";
+    }
+};
+
+class LightOffCommand : public Command
+{
+    Light* light;
+
+public:
+    LightOffCommand(Light* l) : light(l) {}
+
+    void execute() override
+    {
+        cout << "Light off\n";
+    }
+};
+
+queue<Command*> q;
+
+int main()
+{
+    Light light;
+
+    q.push(new LightOnCommand(&light));
+    q.push(new LightOffCommand(&light));
+
+    while (!q.empty())
+    {
+        q.front()->execute();
+        q.pop();
+    }
+
+    return 0;
+}
