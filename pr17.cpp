@@ -657,3 +657,50 @@ int main()
 
     return 0;
 }
+
+
+#include <iostream>
+using namespace std;
+
+class Command {
+public:
+    virtual void execute() = 0;
+    virtual void undo() = 0;
+    virtual ~Command() {}
+};
+
+class Player
+{
+private:
+    int x;
+
+public:
+    Player() : x(0) {}
+
+    void moveRight()
+    {
+        x++;
+        cout << "Move right. Position: " << x << endl;
+    }
+
+    void moveLeft()
+    {
+        x--;
+        cout << "Move left. Position: " << x << endl;
+    }
+};
+
+class MoveRightCommand : public Command
+{
+private:
+    Player* player;
+
+public:
+    MoveRightCommand()
+};
+
+int main()
+{
+
+    return 0;
+}
