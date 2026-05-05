@@ -508,6 +508,98 @@ public:
     virtual ~Command() {}
 };
 
+class Fail
+{
+public:
+    void addFail()
+    {
+        cout << "Add fail\n";
+    }
+
+    void deleteFail()
+    {
+        cout << "Delete fail\n";
+    }
+
+    void renameFail()
+    {
+        cout << "Rename fail\n";
+    }
+};
+
+class AddFailCommand : public Command
+{
+    Fail* fail;
+
+public:
+    AddFailCommand(Fail* f) : fail(f) {}
+
+    void execute() override
+    {
+        cout << "Add fail\n";
+    }
+};
+
+class DeleteFailCommand : public Command
+{
+    Fail* fail;
+
+public:
+    DeleteFailCommand(Fail* f) : fail(f) {}
+
+    void execute() override
+    {
+        cout << "Delete fail\n";
+    }
+};
+
+class RenameFailCommand : public Command
+{
+    Fail* fail;
+
+public:
+    RenameFailCommand(Fail* f) : fail(f) {}
+
+    void execute() override
+    {
+        cout << "Rename fail\n";
+    }
+};
+
+int main()
+{
+    Fail fail;
+
+    AddFailCommand add(&fail);
+    DeleteFailCommand delet(&fail);
+    RenameFailCommand rename(&fail);
+
+    queue<Command*> q;
+
+    q.push(&add);
+    q.push(&delet);
+    q.push(&rename);
+
+    while (!q.empty())
+    {
+        q.front()->execute();
+        q.pop();
+    }
+
+    return 0;
+}
+
+
+#include <iostream>
+#include <queue>
+using namespace std;
+
+class Command {
+public:
+    virtual void execute() = 0;
+    virtual ~Command() {}
+};
+
 class Light
 {
 public:
