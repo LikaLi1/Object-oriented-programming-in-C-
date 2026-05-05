@@ -696,11 +696,27 @@ private:
     Player* player;
 
 public:
-    MoveRightCommand()
+    MoveRightCommand(Player* p) : player(p) {}
+
+    void execute() override
+    {
+        player->moveRight();
+    }
+
+    void undo() override
+    {
+        player->moveLeft();
+    }
 };
 
 int main()
 {
+    Player player;
+
+    MoveRightCommand moveRight(&player);
+
+    moveRight.execute();
+    moveRight.undo();
 
     return 0;
 }
