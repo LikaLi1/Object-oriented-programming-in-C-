@@ -368,3 +368,131 @@ int main()
 
     return 0;
 }
+
+
+#include <iostream>
+using namespace std;
+
+class Command {
+public:
+    virtual void execute() = 0;
+    virtual ~Command() {}
+};
+
+class SmartHouse
+{
+public:
+    void turnOnLamp()
+    {
+        cout << "Turn on lamp\n";
+    }
+    void turnOffLamp()
+    {
+        cout << "Turn off lamp\n";
+    }
+    void turnOnAirConditioner()
+    {
+        cout << "Turn on air conditioner\n";
+    }
+    void openDoor()
+    {
+        cout << "Open door\n";
+    }
+};
+
+class TurnOnLampCommand : public Command
+{
+    SmartHouse* smartHouse;
+
+public:
+    TurnOnLampCommand(SmartHouse* s) : smartHouse(s) {}
+
+    void execute() override
+    {
+        smartHouse->turnOnLamp();
+    }
+};
+
+class TurnOffLampCommand : public Command
+{
+    SmartHouse* smartHouse;
+
+public:
+    TurnOffLampCommand(SmartHouse* s) : smartHouse(s) {}
+
+    void execute() override
+    {
+        smartHouse->turnOffLamp();
+    }
+};
+
+class TurnOnAirConditionerCommand : public Command
+{
+    SmartHouse* smartHouse;
+
+public:
+    TurnOnAirConditionerCommand(SmartHouse* s) : smartHouse(s) {}
+
+    void execute() override
+    {
+        smartHouse->turnOnAirConditioner();
+    }
+};
+
+class OpenDoorCommand : public Command
+{
+    SmartHouse* smartHouse;
+
+public:
+    OpenDoorCommand(SmartHouse* s) : smartHouse(s) {}
+
+    void execute() override
+    {
+        smartHouse->openDoor();
+    }
+};
+
+class AddCommand
+{
+    Command* command;
+
+public:
+    void setCommand(Command* c)
+    {
+        command = c;
+    }
+
+    void press()
+    {
+        command->execute();
+    }
+};
+
+int main()
+{
+    SmartHouse smartHouse;
+
+    Command* cmd1 = new TurnOnLampCommand(&smartHouse);
+    Command* cmd2 = new TurnOffLampCommand(&smartHouse);
+    Command* cmd3 = new TurnOnAirConditionerCommand(&smartHouse);
+    Command* cmd4 = new OpenDoorCommand(&smartHouse);
+
+    AddCommand addCommand;
+    addCommand.setCommand(cmd1);
+    addCommand.press();
+    delete cmd1;
+
+    addCommand.setCommand(cmd2);
+    addCommand.press();
+    delete cmd2;
+
+    addCommand.setCommand(cmd3);
+    addCommand.press();
+    delete cmd3;
+
+    addCommand.setCommand(cmd4);
+    addCommand.press();
+    delete cmd4;
+    
+    return 0;
+}
