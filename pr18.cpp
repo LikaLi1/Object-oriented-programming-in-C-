@@ -345,3 +345,102 @@ int main()
 	pay.start();
 	pay.pay();
 }
+
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Command 
+{
+public:
+	virtual void execute() = 0;
+	virtual ~Command() {}
+};
+
+class Card
+{
+public:
+	void startCard()
+	{
+		cout << "Card\n";
+	}
+};
+
+class StartCardCommand : public Command
+{
+private:
+	Card* card;
+
+public:
+	StartCardCommand(Card* c) : card(c) {}
+
+	void execute() override
+	{
+		card->startCard();
+	}
+};
+
+class QRCode
+{
+public:
+	void startQrCode()
+	{
+		cout << "Qr-Code\n";
+	}
+};
+
+class StartQrCodeCommand : public Command
+{
+private:
+	QRCode* qrcode;
+
+public:
+	StartQrCodeCommand(QRCode* q) : qrcode(q) {}
+
+	void execute() override
+	{
+		qrcode->startQrCode();
+	}
+};
+
+class PaymentFacade
+{
+	vector<Command*> commands;
+
+public:
+	void addCommand(Command* cmd)
+	{
+		commands.push_back(cmd);
+	}
+
+	void start()
+	{
+		for (auto cmd : commands)
+		{
+			cmd->execute();
+		}
+	}
+
+	void pay()
+	{
+		cout << "Choose system\n";
+		cout << "Process payment\n";
+	}
+};
+
+int main()
+{
+	Card plastic;
+	QRCode wifi;
+
+	StartCardCommand ppay(&plastic);
+	StartQrCodeCommand wpay(&wifi);
+
+	PaymentFacade pay;
+	pay.addCommand(&ppay);
+	pay.addCommand(&wpay);
+
+	pay.start();
+	pay.pay();
+}
