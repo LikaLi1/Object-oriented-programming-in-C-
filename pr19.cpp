@@ -304,3 +304,83 @@ int main()
 }
 
 
+#include <iostream>
+#include <vector>
+#include <memory>
+using namespace std;
+
+class Prototype
+{
+public:
+    virtual ~Prototype() = default;
+    virtual unique_ptr<Prototype> clone() const = 0;
+    virtual void print() const = 0;
+};
+
+class Player : public Prototype
+{
+private:
+    vector<string> name;
+    vector<int> hp;
+    vector<string> inventory;
+    vector<string> weapon;
+
+public:
+    Player() = default;
+
+    Player(const vector<string>& n, const vector<int>& h, const vector<string>& i, const vector<string>& w)
+        : name(n), hp(h), inventory(i), weapon(w) {
+    }
+
+    unique_ptr<Prototype> clone() const override {
+        return make_unique<Player>(*this);
+    }
+
+    void addName(const string& title) {
+        name.push_back(title);
+    }
+
+    void addHP(int value) {
+        hp.push_back(value);
+    }
+
+    void addInventory(const string& item) {
+        inventory.push_back(item);
+    }
+
+    void addWeapon(const string& wpn) {
+        weapon.push_back(wpn);
+    }
+
+    void print() const override {
+        cout << "Names: ";
+        for (const auto& n : name) cout << n << " ";
+        cout << "\nHPs: ";
+        for (const auto& h : hp) cout << h << " ";
+        cout << "\nInventory: ";
+        for (const auto& item : inventory) cout << item << " ";
+        cout << "\nWeapons: ";
+        for (const auto& w : weapon) cout << w << " ";
+        cout << endl;
+    }
+};
+
+int main()
+{
+    Player prototype({ "Player1" }, { 100 }, { "Potion" }, { "Sword" });
+
+    auto clone1 = prototype.clone();
+
+    Player* playerClone = static_cast<Player*>(clone1.get());
+
+    playerClone->addName("ClonedPlayer");
+    playerClone->addHP(120);
+    playerClone->addInventory("Elixir");
+    playerClone->addWeapon("Axe");
+
+    playerClone->print();
+
+    prototype.print();
+
+    return 0;
+}
