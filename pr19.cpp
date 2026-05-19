@@ -648,3 +648,199 @@ int main() {
 
     return 0;
 }
+
+
+#include <iostream>
+#include <memory>
+#include <string>
+using namespace std;
+
+class Weapon {
+public:
+    virtual ~Weapon() = default;
+    virtual unique_ptr<Weapon> clone() const = 0;
+    virtual void info() const = 0;
+};
+
+class BasicWeapon : public Weapon {
+public:
+    unique_ptr<Weapon> clone() const override {
+        return make_unique<BasicWeapon>(*this);
+    }
+    void info() const override {
+        cout << "Basic Weapon" << endl;
+    }
+};
+
+class WeaponDecorator : public Weapon {
+protected:
+    unique_ptr<Weapon> weapon;
+public:
+    WeaponDecorator(unique_ptr<Weapon> w) : weapon(move(w)) {}
+    virtual ~WeaponDecorator() = default;
+};
+
+class FireDecorator : public WeaponDecorator {
+public:
+    FireDecorator(unique_ptr<Weapon> w) : WeaponDecorator(move(w)) {}
+    unique_ptr<Weapon> clone() const override {
+        return make_unique<FireDecorator>(weapon->clone());
+    }
+    void info() const override {
+        weapon->info();
+        cout << " + Fire effect" << endl;
+    }
+};
+
+class IceDecorator : public WeaponDecorator {
+public:
+    IceDecorator(unique_ptr<Weapon> w) : WeaponDecorator(move(w)) {}
+    unique_ptr<Weapon> clone() const override {
+        return make_unique<IceDecorator>(weapon->clone());
+    }
+    void info() const override {
+        weapon->info();
+        cout << " + Ice effect" << endl;
+    }
+};
+
+class PoisonDecorator : public WeaponDecorator {
+public:
+    PoisonDecorator(unique_ptr<Weapon> w) : WeaponDecorator(move(w)) {}
+    unique_ptr<Weapon> clone() const override {
+        return make_unique<PoisonDecorator>(weapon->clone());
+    }
+    void info() const override {
+        weapon->info();
+        cout << " + Poison effect" << endl;
+    }
+};
+
+int main() {
+    auto weapon = make_unique<BasicWeapon>();
+    auto decoratedWeapon = make_unique<FireDecorator>(make_unique<IceDecorator>(move(weapon)));
+
+    auto cloneWeapon = decoratedWeapon->clone();
+
+    cout << "Original weapon:" << endl;
+    decoratedWeapon->info();
+
+    cout << "Cloned weapon:" << endl;
+    cloneWeapon->info();
+
+    return 0;
+}
+
+
+#include <iostream>
+#include <memory>
+#include <string>
+using namespace std;
+
+class Character {
+public:
+    string name;
+    int level;
+    Character(const string& n, int l) : name(n), level(l) {}
+    shared_ptr<Character> clone() const {
+        return make_shared<Character>(*this);
+    }
+    void info() const {
+        cout << "Character: " << name << ", Level: " << level << endl;
+    }
+};
+
+class CloneCharacterCommand {
+private:
+    shared_ptr<Character> character;
+
+public:
+    CloneCharacterCommand(shared_ptr<Character> c) : character(c) {}
+    shared_ptr<Character> execute() {
+        return character->clone();
+    }
+};
+
+int main() {
+    auto hero = make_shared<Character>("Hero", 10);
+    hero->info();
+
+    CloneCharacterCommand cmd(hero);
+    auto clone_hero = cmd.execute();
+    clone_hero->info();
+
+    return 0;
+}
+
+
+#include <iostream>
+#include <memory>
+#include <vector>
+#include <string>
+using namespace std;
+
+class Enemy {
+public:
+    string name;
+    int power;
+    Enemy(const string& n, int p) : name(n), power(p) {}
+    shared_ptr<Enemy> clone() const {
+        return make_shared<Enemy>(*this);
+    }
+    void info() const {
+        cout << "Enemy: " << name << ", Power: " << power << endl;
+    }
+};
+
+class GameFacade {
+private:
+    vector<shared_ptr<Enemy>> enemyPrototypes;
+
+public:
+    void createEnemies() {
+        enemyPrototypes.push_back(make_shared<Enemy>("Goblin", 5));
+        enemyPrototypes.push_back(make_shared<Enemy>("Orc", 10));
+        enemyPrototypes.push_back(make_shared<Enemy>("Dragon", 50));
+    }
+
+    shared_ptr<Enemy> cloneEnemy(const string& name) {
+        for (auto& proto : enemyPrototypes) {
+            if (proto->name == name)
+                return proto->clone();
+        }
+        return nullptr;
+    }
+
+    void startLevel() {
+        cout << "Starting level with enemies:" << endl;
+        auto enemy1 = cloneEnemy("Goblin");
+        auto enemy2 = cloneEnemy("Dragon");
+        enemy1->info();
+        enemy2->info();
+    }
+};
+
+int main() {
+    GameFacade game;
+    game.createEnemies();
+    game.startLevel();
+    return 0;
+}
+
+
+class Weapon {
+public:
+    virtual ~Weapon() = default;
+    virtual unique_ptr<Weapon> clone() const = 0;
+    virtual void info() const = 0;
+};
+
+class BasicWeapon : public Weapon {
+public:
+    unique_ptr<Weapon> clone() const override {
+        return make_unique<BasicWeapon>(*this);
+    }
+    void info() const override {
+        cout << "Basic Weapon" << endl;
+    }
+};
