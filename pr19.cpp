@@ -384,3 +384,67 @@ int main()
 
     return 0;
 }
+
+
+#include <iostream>
+#include <map>
+using namespace std;
+
+class Enemy
+{
+private:
+	string name;
+	int level;
+
+public:
+	Enemy(string n, int l) : name(n), level(l) {}
+
+	Enemy* clone()
+	{
+		return new Enemy(*this);
+	}
+
+	void printInfo() const
+	{
+		cout << "Enemy: " << name << ", Level: " << level << endl;
+	}
+};
+
+class EnemyFactory
+{
+private:
+	map<string, Enemy*> prototypes;
+
+public:
+	void addPrototype(string key, Enemy* prototype)
+	{
+		prototypes[key] = prototype;
+	}
+
+	Enemy* create(string key) {
+		return prototypes[key]->clone();
+	}
+};
+
+int main()
+{
+	EnemyFactory factory;
+
+	factory.addPrototype("zombie", new Enemy("Zombie", 1));
+	factory.addPrototype("skeleton", new Enemy("Skeleton", 2));
+	factory.addPrototype("mage", new Enemy("Mage", 5));
+
+	Enemy* e1 = factory.create("zombie");
+	Enemy* e2 = factory.create("skeleton");
+	Enemy* e3 = factory.create("mage");
+
+	e1->printInfo();
+	e2->printInfo();
+	e3->printInfo();
+
+	delete e1;
+	delete e2;
+	delete e3;
+
+	return 0;
+}
