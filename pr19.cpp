@@ -525,3 +525,67 @@ int main()
 
 	return 0;
 }
+
+
+#include <iostream>
+#include <memory>
+#include <chrono>
+#include <thread>
+#include <vector>
+using namespace std;
+
+class Spawner
+{
+public:
+	virtual ~Spawner() = default;
+
+	virtual unique_ptr< Spawner> clone() const = 0;
+	virtual void info() const = 0;
+};
+
+class SpawnerA : public Spawner {
+public:
+	unique_ptr< Spawner> clone() const override {
+		return make_unique<SpawnerA>(*this);
+	}
+	void info() const override {
+		cout << "First Spawner" << endl;
+	}
+};
+
+class SpawnerB : public Spawner {
+public:
+	unique_ptr< Spawner> clone() const override {
+		return make_unique<SpawnerB>(*this);
+	}
+	void info() const override {
+		cout << "Second Spawner" << endl;
+	}
+};
+
+int main()
+{
+	vector<unique_ptr<Spawner>> clones;
+
+	unique_ptr<Spawner> prototype = make_unique< SpawnerA>();
+	auto interval = chrono::milliseconds(500);
+	auto start_time = chrono::steady_clock::now();
+
+	while (clones.size() < 5) {
+		auto current_time = chrono::steady_clock::now();
+		auto elapsed = chrono::duration_cast<chrono::milliseconds>(current_time - start_time);
+		
+
+		if (elapsed >= interval)
+		{
+			clones.push_back(prototype->clone());
+
+			cout << "Clones: " << clones.size() << endl;
+			clones.back()->info();
+
+			start_time = current_time;
+		}
+
+		this_thread::sleep_for(chrono::milliseconds(50));
+	}
+}
