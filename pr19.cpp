@@ -589,3 +589,62 @@ int main()
 		this_thread::sleep_for(chrono::milliseconds(50));
 	}
 }
+
+
+#include <iostream>
+#include <memory>
+#include <vector>
+using namespace std;
+
+class Spell {
+public:
+    virtual ~Spell() = default;
+    virtual unique_ptr<Spell> clone() const = 0;
+    virtual void cast() const = 0;
+};
+
+class Fireball : public Spell {
+public:
+    unique_ptr<Spell> clone() const override {
+        return make_unique<Fireball>(*this);
+    }
+    void cast() const override {
+        cout << "Casting Fireball!" << endl;
+    }
+};
+
+class IceBlast : public Spell {
+public:
+    unique_ptr<Spell> clone() const override {
+        return make_unique<IceBlast>(*this);
+    }
+    void cast() const override {
+        cout << "Casting IceBlast!" << endl;
+    }
+};
+
+class PoisonCloud : public Spell {
+public:
+    unique_ptr<Spell> clone() const override {
+        return make_unique<PoisonCloud>(*this);
+    }
+    void cast() const override {
+        cout << "Casting PoisonCloud!" << endl;
+    }
+};
+
+int main() {
+    vector<unique_ptr<Spell>> spellPrototypes;
+    spellPrototypes.push_back(make_unique<Fireball>());
+    spellPrototypes.push_back(make_unique<IceBlast>());
+    spellPrototypes.push_back(make_unique<PoisonCloud>());
+
+    vector<unique_ptr<Spell>> spells;
+    for (const auto& proto : spellPrototypes) {
+        auto spell = proto->clone();
+        spell->cast();
+        spells.push_back(move(spell));
+    }
+
+    return 0;
+}
