@@ -439,3 +439,110 @@ int main()
 
 	return 0;
 }
+
+
+#include <iostream>
+using namespace std;
+
+class Query
+{
+private:
+	string sql;
+
+public:
+	Query(string s) : sql(s) {}
+
+	void show()
+	{
+		cout << "SQL: " << sql << endl;
+	}
+};
+
+class QueryBuilder
+{
+private:
+	string selectText = "";
+	string fromText = "";
+	string whereText = "";
+	string orderByText = "";
+	string limitText = "";
+
+public:
+	QueryBuilder& select(string file)
+	{
+		selectText = "SELECT " + file;
+		return *this;
+	}
+
+	QueryBuilder& from(string table)
+	{
+		fromText = "FROM " + table;
+		return *this;
+	}
+
+	QueryBuilder& where(string condition)
+	{
+		whereText = "WHERE " + condition;
+		return *this;
+	}
+
+	QueryBuilder& orderBy(string files)
+	{
+		orderByText = "ORDER BY " + files;
+		return *this;
+	}
+
+	QueryBuilder& limit(string number)
+	{
+		limitText = "LIMIT " + number;
+		return *this;
+	}
+
+	Query build()
+	{
+		if (selectText == "" || fromText == "")
+		{
+			cout << "Error" << endl;
+		}
+		string sql = selectText + " " + fromText;
+
+		if (!whereText.empty())
+		{
+			sql += " " + whereText;
+		}
+		if (!orderByText.empty())
+		{
+			sql += " " + orderByText;
+		}
+		if (!limitText.empty())
+		{
+			sql += " " + limitText;
+		}
+
+		sql += ";";
+
+		return Query(sql);
+	}
+};
+
+int main()
+{
+	try
+	{
+		Query query = QueryBuilder()
+			.select("name, age")
+			.from("Users")
+			.where("age > 18")
+			.orderBy("name")
+			.limit("10")
+			.build();
+
+		query.show();
+	}
+	catch (const exception& e)
+	{
+		cout << e.what() << endl;
+	}
+
+	return 0;
+}
