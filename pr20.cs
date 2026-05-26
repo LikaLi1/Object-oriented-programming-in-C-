@@ -314,3 +314,128 @@ int main()
 
 	return 0;
 }
+
+
+#include <iostream>
+#include <stdexcept>
+using namespace std;
+
+class DatabaseConfig
+{
+private:
+	string host;
+	int port;
+	string login;
+	string password;
+	string databaseName;
+	bool useSSL;
+	string timeout;
+
+public:
+	DatabaseConfig(string h, int p, string l, string pa, string d, bool u, string t) : host(h), port(p), login(l), password(pa), databaseName(d), useSSL(u), timeout(t) {}
+
+	void show()
+	{
+		cout << "Host: " << host << endl;
+		cout << "Port: " << port << endl;
+		cout << "Login: " << login << endl;
+		if (!password.empty())
+		{
+			cout << "Password: " << password << endl;
+		}
+		else
+		{
+			cout << "Password is Null" << endl;
+		}
+		cout << "Database name: " << databaseName << endl;
+		cout << "Use SSL: " << (useSSL ? "yes" : "no") << endl;
+		cout << "Timeout: " << timeout << endl;
+	}
+};
+
+class DatabaseConfigBuilder
+{
+private:
+	string host = "";
+	int port = 0;
+	string login = "";
+	string password = "";
+	string databaseName = "";
+	bool useSSL = false;
+	string timeout = "";
+
+public:
+	DatabaseConfigBuilder& setHost(string h)
+	{
+		host = h;
+		return *this;
+	}
+
+	DatabaseConfigBuilder& setPort(int p)
+	{
+		if (p < 0 || p > 65535)
+		{
+			throw std::invalid_argument("Invalid port number!");
+		}
+		port = p;
+		return *this;
+	}
+
+	DatabaseConfigBuilder& setLogin(string l)
+	{
+		login = l;
+		return *this;
+	}
+
+	DatabaseConfigBuilder& setPassword(string pa)
+	{
+		password = pa;
+		return *this;
+	}
+
+	DatabaseConfigBuilder& setDatabaseName(string d)
+	{
+		databaseName = d;
+		return *this;
+	}
+
+	DatabaseConfigBuilder& enableSSL()
+	{
+		useSSL = true;
+		return *this;
+	}
+
+	DatabaseConfigBuilder& setTimeout(string t)
+	{
+		timeout = t;
+		return *this;
+	}
+
+	DatabaseConfig build()
+	{
+		return DatabaseConfig(host, port, login, password, databaseName, useSSL, timeout);
+	}
+};
+
+int main()
+{
+	try{
+	DatabaseConfig databaseConfig = DatabaseConfigBuilder()
+		.setHost("Host")
+		.setPort(523)
+		.setLogin("Admin")
+		.setPassword("")
+		.setDatabaseName("K")
+		.enableSSL()
+		.setTimeout("21.06.25")
+		.build();
+
+	databaseConfig.show();
+	}
+	catch (const std::invalid_argument& e)
+	{
+		std::cerr << "Ошибка: " << e.what() << std::endl;
+	}
+
+	return 0;
+}
