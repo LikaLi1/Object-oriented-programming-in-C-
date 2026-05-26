@@ -546,3 +546,160 @@ int main()
 
 	return 0;
 }
+
+
+#include <iostream>
+using namespace std;
+
+class Computer
+{
+private:
+	string CPU;
+	string GPU;
+	int RAM;
+	int SSD;
+	bool HDD;
+	bool Wi_Fi;
+	bool waterCooling;
+
+public:
+	Computer(string c, string  g, int r, int s, bool h, bool wi, bool wa) : CPU(c), GPU(g), RAM(r), SSD(s), HDD(h), Wi_Fi(wi), waterCooling(wa) {}
+
+	void show()
+	{
+		cout << "CPU: " << CPU << endl;
+		cout << "GPU: " << GPU << endl;
+		cout << "RAM: " << RAM << endl;
+		cout << "SSD: " << SSD << endl;
+		cout << "HDD: " << HDD << endl;
+		cout << "Wi_Fi: " << Wi_Fi << endl;
+		cout << "waterCooling: " << waterCooling << endl;
+	}
+};
+
+class ComputerBuilder
+{
+private:
+	string CPU = "";
+	string GPU = "";
+	int RAM = 0;
+	int SSD = 0;
+	bool HDD = false;
+	bool Wi_Fi = false;
+	bool waterCooling = false;
+
+public:
+	ComputerBuilder& setCPU(string c)
+	{
+		CPU = c;
+		return *this;
+	}
+
+	ComputerBuilder& setGPU(string g)
+	{
+		GPU = g;
+		return *this;
+	}
+
+	ComputerBuilder& setRAM(int r)
+	{
+		RAM = r;
+		return *this;
+	}
+
+	ComputerBuilder& setSSD(int s)
+	{
+		SSD = s;
+		return *this;
+	}
+
+	ComputerBuilder& setHDD(bool h)
+	{
+		HDD = h;
+		return *this;
+	}
+
+	ComputerBuilder& setWi_Fi(bool wi)
+	{
+		Wi_Fi = wi;
+		return *this;
+	}
+
+	ComputerBuilder& setWaterCooling(bool wa)
+	{
+		waterCooling = wa;
+		return *this;
+	}
+
+	Computer  build()
+	{
+		return Computer(CPU, GPU, RAM, SSD, HDD, Wi_Fi, waterCooling);
+	}
+};
+
+class ComputerDirector
+{
+public:
+	Computer computerOfficePC()
+	{
+		return ComputerBuilder()
+			.setCPU("Apple M4")
+			.setGPU("Integrated")
+			.setRAM(16)
+			.setSSD(180)
+			.setHDD(1)
+			.setWi_Fi(true)
+			.setWaterCooling(false)
+			.build();
+	}
+
+	Computer computerGamingPC()
+	{
+		return ComputerBuilder()
+			.setCPU("AMD Ryzen 7 9800X3D")
+			.setGPU("NVIDIA GeForce RTX 3080")
+			.setRAM(32)
+			.setSSD(1000)
+			.setHDD(2)
+			.setWi_Fi(true)
+			.setWaterCooling(true)
+			.build();
+	}
+
+	Computer computerServer()
+	{
+		return ComputerBuilder()
+			.setCPU("Intel Xeon Silver 4214")
+			.setGPU("None")
+			.setRAM(64)
+			.setSSD(2000)
+			.setHDD(8)
+			.setWi_Fi(false)
+			.setWaterCooling(true)
+			.build();
+	}
+};
+
+int main()
+{
+	ComputerDirector computerDirector;
+
+	Computer officePC = computerDirector.computerOfficePC();
+	Computer gamingPC = computerDirector.computerGamingPC();
+	Computer server = computerDirector.computerServer();
+
+	cout << "Office PC: " << endl;
+	officePC.show();
+
+	cout << " " << endl;
+
+	cout << "Gaming PC: " << endl;
+	gamingPC.show();
+
+	cout << " " << endl;
+
+	cout << "Server: " << endl;
+	server.show();
+
+	return 0;
+}
