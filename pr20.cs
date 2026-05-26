@@ -127,14 +127,96 @@ class Order
 {
 private:
 	string name;
-	string listOrder;
-	string divilery;
-	int qr_code;
-	string gift;
+	vector<string> listOrder;
+	bool divilery;
+	string qr_code;
+	bool gift;
 	string commentOrder;
 
 public:
-	Order(string n, string l, string d, int q, string g, string c) : name(n), listOrder(l), divilery(d), qr_code(q), gift(g), commentOrder(c) {}
+	Order(string n, vector<string> l, bool d, string q, bool g, string c) : name(n), listOrder(l), divilery(d), qr_code(q), gift(g), commentOrder(c) {}
 
-
+	void show()
+	{
+		cout << "name: " << name << endl;
+		cout << "List Order: ";
+		for (string listsOrder : listOrder)
+		cout << listsOrder << endl;
+		cout << "Divilery: " << (divilery ? "yes" : "no") << endl;
+		cout << "QR Code: " << (qr_code.empty() ? "none" : qr_code) << endl;
+		cout << "Gift: " << (gift ? "yes" : "no") << endl;
+		cout << "Comment Order: " << commentOrder << endl;
+	}
 };
+
+class OrderBuilder
+{
+private:
+	string name = "";
+	vector<string> listOrder;
+	bool divilery = false;
+	string qr_code = "";
+	bool gift = false;
+	string commentOrder = "";
+
+public:
+	OrderBuilder& setName(string n)
+	{
+		name = n;
+		return *this;
+	}
+
+	OrderBuilder& addProduct(string listsOrder)
+	{
+		listOrder.push_back(listsOrder);
+		return *this;
+	}
+
+	OrderBuilder& setDivilery()
+	{
+		divilery = false;
+		return *this;
+	}
+
+	OrderBuilder& setQr_code(string q)
+	{
+		qr_code = q;
+		return *this;
+	}
+
+	OrderBuilder& setGift()
+	{
+		gift = true;
+		return *this;
+	}
+
+	OrderBuilder& setCommentOrder(string c)
+	{
+		commentOrder = c;
+		return *this;
+	}
+
+	Order build()
+	{
+		return Order(name, listOrder, divilery, qr_code, gift, commentOrder);
+	}
+};
+
+int main()
+{
+	Order order = OrderBuilder()
+		.setName("Lora")
+		.addProduct("Telephone")
+		.addProduct("Camera")
+		.setDivilery()
+		.setQr_code("5876_K")
+		.setGift()
+		.setCommentOrder("Good shop")
+		.build();
+
+	order.show();
+
+	return 0;
+}
+
+
