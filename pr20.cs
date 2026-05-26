@@ -220,3 +220,97 @@ int main()
 }
 
 
+#include <iostream>
+#include <string>
+#include <map>
+using namespace std;
+
+class HttpRequest
+{
+private:
+	string methodRequest;
+	string url;
+	map<string, string> header;
+	int setting;
+	string bodyRequest;
+
+public:
+	HttpRequest(string m, string u, map<string, string> h, int s, string b) : methodRequest(m), url(u), header(h), setting(s), bodyRequest(b) {}
+
+	void show()
+	{
+		cout << "Method request: " << methodRequest << endl;
+		cout << "URL: " << url << endl;
+		cout << "Header: ";
+		for (auto headers : header)
+		{
+			cout << headers.first << ": " << headers.second << endl;
+		}
+		cout << "Setting: " << setting << endl;
+		if (!bodyRequest.empty())
+		{
+			cout << "Body: " << bodyRequest << endl;
+		}
+	}
+};
+
+class HttpRequestBuilder
+{
+private:
+	string methodRequest = "";
+	string url = "";
+	map<string, string> header;
+	int setting = 5452;
+	string bodyRequest = "";
+
+public:
+	HttpRequestBuilder& setMethodRequest(string m)
+	{
+		methodRequest = m;
+		return *this;
+	}
+
+	HttpRequestBuilder& setURL(string u)
+	{
+		url = u;
+		return *this;
+	}
+
+	HttpRequestBuilder& addHeader(string key, string value)
+	{
+		header[key] = value;
+		return *this;
+	}
+
+	HttpRequestBuilder& setSetting(int s)
+	{
+		setting = s;
+		return *this;
+	}
+
+	HttpRequestBuilder& setBodyRequest(string b)
+	{
+		bodyRequest = b;
+		return *this;
+	}
+
+	HttpRequest build()
+	{
+		return HttpRequest(methodRequest, url, header, setting, bodyRequest);
+	}
+};
+
+int main()
+{
+	HttpRequest httpRequest = HttpRequestBuilder()
+		.setMethodRequest("Method")
+		.setURL("/github/user")
+		.addHeader("Text", "TXT")
+		.setSetting(5486)
+		.setBodyRequest("Object")
+		.build();
+
+	httpRequest.show();
+
+	return 0;
+}
