@@ -1096,3 +1096,115 @@ int main()
 
 	return 0;
 }
+
+
+#include <iostream>
+using namespace std;
+
+class Order
+{
+private:
+	string firstName;
+	string lastName;
+	int age;
+
+public:
+	Order(string f, string l, int a) : firstName(f), lastName(l), age(a) {}
+
+	void show() const
+	{
+		cout << "First name: " << firstName << endl;
+		cout << "Last name: " << lastName << endl;
+		cout << "Age: " << age << endl;
+	}
+};
+
+class OrderBuilder
+{
+private:
+	string firstName = "";
+	string lastName = "";
+	int age = 0;
+
+public:
+	OrderBuilder& setFirstName(const string& f)
+	{
+		firstName = f;
+		return *this;
+	}
+
+	OrderBuilder& setLastName(const string& l)
+	{
+		lastName = l;
+		return *this;
+	}
+
+	OrderBuilder& setAge(int a)
+	{
+		age = a;
+		return *this;
+	}
+
+	Order build()
+	{
+		return Order(firstName, lastName, age);
+	}
+};
+
+class PaymentService {
+public:
+	void startPaymentService(const Order& order)
+	{
+		cout << "Payment Service\n";
+		order.show();
+	}
+};
+
+class DeliveryService {
+public:
+	void startDeliveryService(const Order& order)
+	{
+		cout << "Delivery Service\n";
+		order.show();
+	}
+};
+
+class NotificationService {
+public:
+	void startNotificationService(const Order& order)
+	{
+		cout << "Notification Service\n";
+		order.show();
+	}
+};
+
+class OrderFacade
+{
+	PaymentService pay;
+	DeliveryService delivery;
+	NotificationService notification;
+
+public:
+	void startOrderFacade(const Order& order)
+	{
+		pay.startPaymentService(order);
+		delivery.startDeliveryService(order);
+		notification.startNotificationService(order);
+	}
+
+};
+
+int main()
+{
+	OrderBuilder orderBuilder;
+	Order order = orderBuilder
+		.setFirstName("Kate")
+		.setLastName("Nik")
+		.setAge(24)
+		.build();
+
+	OrderFacade orderFacade;
+	orderFacade.startOrderFacade(order);
+
+	return 0;
+}
