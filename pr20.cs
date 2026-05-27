@@ -1208,3 +1208,103 @@ int main()
 
 	return 0;
 }
+
+
+#include <iostream>
+using namespace std;
+
+class Order
+{
+private:
+	string firstName;
+	string lastName;
+	int age;
+
+public:
+	Order(string f, string l, int a) : firstName(f), lastName(l), age(a) {}
+
+	void show() const
+	{
+		cout << "First name: " << firstName << endl;
+		cout << "Last name: " << lastName << endl;
+		cout << "Age: " << age << endl;
+	}
+};
+
+class OrderBuilder
+{
+private:
+	string firstName = "";
+	string lastName = "";
+	int age = 0;
+
+public:
+	OrderBuilder& setFirstName(const string& f)
+	{
+		firstName = f;
+		return *this;
+	}
+
+	OrderBuilder& setLastName(const string& l)
+	{
+		lastName = l;
+		return *this;
+	}
+
+	OrderBuilder& setAge(int a)
+	{
+		age = a;
+		return *this;
+	}
+
+	Order build()
+	{
+		return Order(firstName, lastName, age);
+	}
+};
+
+class DiscountStrategy 
+{
+public:
+	virtual void discount() = 0;
+	virtual ~DiscountStrategy() {}
+};
+
+class NoDiscount : public DiscountStrategy
+{
+public:
+	void discount() override
+	{
+		cout << "NoDiscount\n";
+	}
+};
+
+class PercentDiscount : public DiscountStrategy
+{
+public:
+	void discount() override
+	{
+		cout << "PercentDiscount\n";
+	}
+};
+
+class FixedDiscount : public DiscountStrategy
+{
+public:
+	void discount() override
+	{
+		cout << "FixedDiscount\n";
+	}
+};
+
+int main()
+{
+	OrderBuilder orderBuilder;
+	Order order = orderBuilder
+		.setFirstName("Kate")
+		.setLastName("Nik")
+		.setAge(24)
+		.build();
+
+	return 0;
+}
