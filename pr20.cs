@@ -1467,3 +1467,91 @@ int main()
 }
 
 
+#include <iostream>
+#include <string>
+#include <algorithm> 
+using namespace std;
+
+class Prototype
+{
+public:
+    virtual Prototype* clone() = 0;
+    virtual void show() const = 0;
+    virtual ~Prototype() {}
+};
+
+class Character : public Prototype {
+private:
+    string name;
+    int hp;
+    int damage;
+    string weapons;
+
+public:
+    Character(string n, int h, int d, string w) : name(n), hp(h), damage(d), weapons(w) {}
+
+    Prototype* clone() override
+    {
+        return new Character(*this);
+    }
+
+    void show() const {
+        cout << "Name: " << name << endl;
+        cout << "HP: " << hp << endl;
+        cout << "Damage: " << damage << endl;
+        cout << "Weapons: " << weapons << endl;
+    }
+};
+
+class CharacterBuilder {
+private:
+    string name = "";
+    int hp = 0;
+    int damage= 0;
+    string weapons = "";
+
+public:
+    CharacterBuilder& setName(string n) {
+        name = n;
+        return *this;
+    }
+
+    CharacterBuilder& setHP(int h) {
+        hp = h > 0 ? h : 0;
+        return *this;
+    }
+
+    CharacterBuilder& setDamage(int d) {
+        damage = d > 0 ? d : 0;
+        return *this;
+    }
+
+    CharacterBuilder& setWeapons(string w) {
+        weapons = w;
+        return *this;
+    }
+
+    Character build() {
+        return Character (name, hp, damage, weapons);
+    }
+};
+
+int main()
+{
+    Character character = CharacterBuilder()
+        .setName("Kate")
+        .setHP(100)
+        .setDamage(20)
+        .setWeapons("Knife")
+        .build();
+
+    Character* character1 = dynamic_cast<Character*>(character.clone());
+    character1->show();
+
+    cout << endl;
+
+    Character* character2 = dynamic_cast<Character*>(character.clone());
+    character2->show();
+
+    return 0;
+}
