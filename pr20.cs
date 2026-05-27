@@ -858,11 +858,9 @@ public:
 		cout << "Enemy: ";
 		for (string listEnemy : listE)
 			cout << listEnemy << endl;
-		cout << endl;
 		cout << "Item: ";
 		for (string listItem : listI)
 			cout << listItem << endl;
-		cout << endl;
 		cout << "Boss: " << boss << endl;
 		cout << "Weather affect: " << weatherAffect << endl;
 	}
@@ -917,7 +915,14 @@ public:
 
 	GameLevel build()
 	{
-		return GameLevel(title, hard, listE, )
+		if (title.empty())
+		{
+			cout << "Title is Null" << endl;
+		}
+		else
+		{
+			return GameLevel(title, hard, listE, listI, boss, weatherAffect);
+		}
 	}
 };
 
@@ -938,3 +943,5 @@ int main()
 
 	return 0;
 }
+
+
