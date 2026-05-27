@@ -945,3 +945,154 @@ int main()
 }
 
 
+#include <iostream>
+using namespace std;
+
+class Notification
+{
+private:
+	string recipient;
+	string heading;
+	string text;
+	string sendingChannel;
+	int priority;
+	string confirmation;
+
+public:
+	Notification(string r, string  h, string t, string s, int p, string c) : recipient(r), heading(h), text(t), sendingChannel(s), priority(p), confirmation(c) {}
+
+	void show()
+	{
+		cout << "Recipient: " << recipient << endl;
+		cout << "Heading: " << heading << endl;
+		cout << "Text: " << text << endl;
+		cout << "SendingChannel: " << sendingChannel << endl;
+		cout << "Priority: " << priority << endl;
+		cout << "Confirmation: " << confirmation << endl;
+	}
+};
+
+class NotificationBuilder
+{
+private:
+	string recipient = "";
+	string heading = "";
+	string text = "";
+	string sendingChannel = "";
+	int priority = 0;
+	string confirmation = "";
+
+public:
+	NotificationBuilder& setRecipient(string r)
+	{
+		recipient = r;
+		return *this;
+	}
+
+	NotificationBuilder& setHeading(string h)
+	{
+		heading = h;
+		return *this;
+	}
+
+	NotificationBuilder& setText(string t)
+	{
+		text = t;
+		return *this;
+	}
+
+	NotificationBuilder& setSendingChannel(string s)
+	{
+		sendingChannel = s;
+		return *this;
+	}
+
+	NotificationBuilder& setPriority(int p)
+	{
+		priority = p;
+		return *this;
+	}
+
+	NotificationBuilder& setConfirmation(string c)
+	{
+		confirmation = c;
+		return *this;
+	}
+
+	Notification build()
+	{
+		if (recipient.empty())
+		{
+			throw runtime_error("Recipient is Null");
+		}
+		if (text.empty())
+		{
+			throw runtime_error("Text is Null");
+		}
+		return Notification(recipient, heading, text, sendingChannel, priority, confirmation);
+	}
+};
+
+class SendingChannelDirector
+{
+public:
+	Notification notificationEmail()
+	{
+		return NotificationBuilder()
+			.setRecipient("user@example.com")
+			.setHeading("Welcome!")
+			.setText("Thank you for registering. Please confirm your email.")
+			.setSendingChannel("email")
+			.setPriority(1)
+			.setConfirmation("confirmation_link")
+			.build();
+	}
+
+	Notification notificationSms()
+	{
+		return NotificationBuilder()
+			.setRecipient("+71231231213")
+			.setHeading("Reg")
+			.setText("Your code: 12345")
+			.setSendingChannel("sms")
+			.setPriority(2)
+			.setConfirmation("12345")
+			.build();
+	}
+
+	Notification notificationPush()
+	{
+		return NotificationBuilder()
+			.setRecipient("device_token_ABCDEF123456")
+			.setHeading("Notification")
+			.setText("You received a new push!")
+			.setSendingChannel("push")
+			.setPriority(3)
+			.setConfirmation("")
+			.build();
+	}
+};
+
+int main()
+{
+	SendingChannelDirector sendingChannelDirector;
+
+	Notification notificationEmail = sendingChannelDirector.notificationEmail();
+	Notification notificationSms = sendingChannelDirector.notificationSms();
+	Notification notificationPush = sendingChannelDirector.notificationPush();
+
+	cout << "Email: " << endl;
+	notificationEmail.show();
+
+	cout << endl;
+
+	cout << "SMS: " << endl;
+	notificationSms.show();
+
+	cout << endl;
+
+	cout << "Push: " << endl;
+	notificationPush.show();
+
+	return 0;
+}
