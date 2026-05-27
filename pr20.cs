@@ -1308,3 +1308,162 @@ int main()
 
 	return 0;
 }
+
+
+// Вопросы
+#include <iostream>
+#include <string>
+#include <algorithm> 
+
+using namespace std;
+
+class DiscountStrategy;
+
+class Order {
+private:
+    string firstName;
+    string lastName;
+    int age;
+    double baseAmount;
+    double finalAmount;
+    double sym;
+    const DiscountStrategy* discountStrategy;
+
+public:
+    Order(string f, string l, int a, double am, double s, const DiscountStrategy* strategy) : firstName(f), lastName(l), age(a), baseAmount(am), sym(s), discountStrategy(strategy), finalAmount(0) {}
+
+    void applyDiscount() {
+        if (discountStrategy != nullptr) {
+            finalAmount = discountStrategy->calculate(*this);
+        }
+        else {
+            finalAmount = baseAmount;
+        }
+    }
+
+    double getBaseAmount() const { return baseAmount; }
+    double getSym() const { return sym; }
+
+    void show() const {
+        cout << "First name: " << firstName << " Last name: " << lastName << endl;
+        cout << "Age: " << age << endl;
+        cout << "Base amount: $" << baseAmount << endl;
+        cout << "Final amount: $" << finalAmount << endl;
+    }
+};
+
+class DiscountStrategy {
+public:
+    virtual ~DiscountStrategy() {}
+    virtual double calculate(const Order& order) const = 0;
+};
+
+class NoDiscount : public DiscountStrategy {
+public:
+    double calculate(const Order& order) const override {
+        return order.getBaseAmount();
+    }
+};
+
+class PercentDiscount : public DiscountStrategy {
+public:
+    double calculate(const Order& order) const override {
+        double percent = order.getSym();
+        double discountValue = order.getBaseAmount() * (percent / 100.0);
+        return max(0.0, order.getBaseAmount() - discountValue);
+    }
+};
+
+class FixedDiscount : public DiscountStrategy {
+public:
+    double calculate(const Order& order) const override {
+        double discountValue = order.getSym();
+        return max(0.0, order.getBaseAmount() - discountValue);
+    }
+};
+
+class OrderBuilder {
+private:
+    string firstName = "";
+    string lastName = "";
+    int age = 0;
+    double amount = 0.0;
+    double sym = 0.0;
+    const DiscountStrategy* discountStrategy = &NoDiscount();
+
+public:
+    OrderBuilder& setFirstName(const string& f) {
+        firstName = f;
+        return *this;
+    }
+
+    OrderBuilder& setLastName(const string& l) {
+        lastName = l;
+        return *this;
+    }
+
+    OrderBuilder& setAge(int a) {
+        age = a;
+        return *this;
+    }
+
+    OrderBuilder& setBaseAmount(double amount) {
+        this->amount = amount;
+        return *this;
+    }
+
+    OrderBuilder& setSym(double s) {
+        sym = s;
+        return *this;
+    }
+
+    OrderBuilder& withDiscountStrategy(const DiscountStrategy* strategy) {
+        discountStrategy = strategy;
+        return *this;
+    }
+
+    Order build() {
+        Order order(firstName, lastName, age, amount, sym, discountStrategy);
+        order.applyDiscount();
+        return order;
+    }
+};
+
+int main()
+{
+    OrderBuilder builder;
+
+    Order order1 = builder
+        .setFirstName("Kate")
+        .setLastName("Nik")
+        .setAge(24)
+        .setBaseAmount(1000.0)
+        .setSym(0)
+        .withDiscountStrategy(new NoDiscount())
+        .build();
+    order1.show();
+
+    Order order2 = builder
+        .setFirstName("Ivan")
+        .setLastName("Ivanov")
+        .setAge(45)
+        .setBaseAmount(5000.0)
+        .setSym(15)
+        .withDiscountStrategy(new PercentDiscount())
+        .build();
+    order2.show();
+
+    Order order3 = builder
+        .setFirstName("Maria")
+        .setLastName("Sidorova")
+        .setAge(38)
+        .setBaseAmount(2500.0)
+        .setSym(200)
+        .withDiscountStrategy(new FixedDiscount())
+        .build();
+    order3.show();
+
+    return 0;
+}
+
+
