@@ -703,3 +703,120 @@ int main()
 
 	return 0;
 }
+
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+class UserProfile
+{
+private:
+	string login;
+	string email;
+	string phone;
+	string city;
+	int age;
+	string role;
+	bool isVerified;
+
+public:
+	UserProfile(string l, string  e, string p, string c, int a, string r, bool i) : login(l), email(e), phone(p), city(c), age(a), role(r), isVerified(i) {}
+
+	void show()
+	{
+		cout << "Login: " << login << endl;
+		cout << "Email: " << email << endl;
+		cout << "Phone: " << phone << endl;
+		cout << "City: " << city << endl;
+		cout << "Age: " << age << endl;
+		cout << "Role: " << role << endl;
+		cout << "Is verified: " << isVerified << endl;
+	}
+};
+
+class UserProfileBuilder
+{
+private:
+	string login = "";
+	string email = "";
+	string phone = "";
+	string city = "";
+	int age = 0;
+	string role = "user";
+	bool isVerified = false;
+
+public:
+	UserProfileBuilder& setLogin(string l)
+	{
+		login = l;
+		return *this;
+	}
+
+	UserProfileBuilder& setEmail(string e)
+	{
+		email = e;
+		return *this;
+	}
+
+	UserProfileBuilder& setPhone(string p)
+	{
+		phone = p;
+		return *this;
+	}
+
+	UserProfileBuilder& setCity(string c)
+	{
+		city = c;
+		return *this;
+	}
+
+	UserProfileBuilder& setAge(int a)
+	{
+		age = a;
+		return *this;
+	}
+
+	UserProfileBuilder& setRole(bool r)
+	{
+		role = r;
+		return *this;
+	}
+
+	UserProfileBuilder& enableIsVerified(bool i)
+	{
+		isVerified = i;
+		return *this;
+	}
+
+	UserProfile verify()
+	{
+		if (login.empty())
+		{
+			cout << "Login is Null" << endl;
+		}
+		if (login.size() < 8)
+		{
+
+		}
+	}
+
+	UserProfile build()
+	{
+		char sym = '@';
+
+		if (email.find(sym) != string::npos) {
+			return UserProfile(login, email, phone, city, age, role, isVerified);
+		}
+		else {
+			std::cout << "Sym '@' not founded" << std::endl;
+		}
+	}
+};
+
+int main()
+{
+	
+
+	return 0;
+}
