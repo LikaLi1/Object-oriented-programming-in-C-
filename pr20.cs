@@ -834,3 +834,107 @@ int main()
 }
 
 
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class GameLevel
+{
+private:
+	string title;
+	int hard;
+	vector<string> listE;
+	vector<string> listI;
+	bool boss;
+	string weatherAffect;
+
+public:
+	GameLevel(string t, int  h, vector<string> e, vector<string> i, bool b, string w) : title(t), hard(h), listE(e), listI(i), boss(b), weatherAffect(w) {}
+
+	void show()
+	{
+		cout << "Title: " << title << endl;
+		cout << "Hard: " << hard << endl;
+		cout << "Enemy: ";
+		for (string listEnemy : listE)
+			cout << listEnemy << endl;
+		cout << endl;
+		cout << "Item: ";
+		for (string listItem : listI)
+			cout << listItem << endl;
+		cout << endl;
+		cout << "Boss: " << boss << endl;
+		cout << "Weather affect: " << weatherAffect << endl;
+	}
+};
+
+class GameLevelBuilder
+{
+private:
+	string title = "";
+	int hard = 0;
+	vector<string> listE;
+	vector<string> listI;
+	bool boss = false;
+	string weatherAffect = "";
+
+public:
+	GameLevelBuilder& setTitle(string t)
+	{
+		title = t;
+		return *this;
+	}
+
+	GameLevelBuilder& setHard(int h)
+	{
+		hard = h;
+		return *this;
+	}
+
+	GameLevelBuilder& addEnemy(string listEnemy)
+	{
+		listE.push_back(listEnemy);
+		return *this;
+	}
+
+	GameLevelBuilder& addItem(string listItem)
+	{
+		listI.push_back(listItem);
+		return *this;
+	}
+
+	GameLevelBuilder& enableBoss(int b)
+	{
+		boss = b;
+		return *this;
+	}
+
+	GameLevelBuilder& setWeatherAffect(bool w)
+	{
+		weatherAffect = w;
+		return *this;
+	}
+
+	GameLevel build()
+	{
+		return GameLevel(title, hard, listE, )
+	}
+};
+
+int main()
+{
+	GameLevel gameLevel = GameLevelBuilder()
+		.setTitle("King")
+		.setHard(5)
+		.addEnemy("Robot")
+		.addEnemy("Mouse")
+		.addItem("Knife")
+		.addItem("Flower")
+		.enableBoss(true)
+		.setWeatherAffect("Rain")
+		.build();
+
+	gameLevel.show();
+
+	return 0;
+}
