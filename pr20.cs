@@ -789,7 +789,7 @@ public:
 		return *this;
 	}
 
-	UserProfile verify()
+	UserProfileBuilder& verify()
 	{
 		if (login.empty())
 		{
@@ -797,8 +797,9 @@ public:
 		}
 		if (login.size() < 8)
 		{
-
+			cout << "Login < 8 sym" << endl;
 		}
+		return *this;
 	}
 
 	UserProfile build()
@@ -816,7 +817,20 @@ public:
 
 int main()
 {
-	
+	UserProfile userProfile = UserProfileBuilder()
+		.setLogin("Game_1257")
+		.setEmail("mail@")
+		.setPhone("+79865421599")
+		.setCity("Moscow")
+		.setAge(15)
+		.setRole("")
+		.enableIsVerified(true)
+		.verify()
+		.build();
+
+	userProfile.show();
 
 	return 0;
 }
+
+
