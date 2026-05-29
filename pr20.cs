@@ -1555,3 +1555,139 @@ int main()
 
     return 0;
 }
+
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Burger {
+protected:
+    string size;
+    string type;
+    int amount;
+    double price;
+
+public:
+    virtual string eating() = 0;
+    virtual double getPrice() const { return price; }
+    virtual ~Burger() {}
+
+    Burger(string s, string t, int a, double p)
+        : size(s), type(t), amount(a), price(p) {
+    }
+
+    void show() {
+        cout << "Size: " << size << endl;
+        cout << "Type: " << type << endl;
+        cout << "Amount: " << amount << " g" << endl;
+        cout << "Price: $" << price << endl;
+    }
+};
+
+class BurgerDecorator : public Burger {
+protected:
+    Burger* decoratedBurger;
+
+public:
+    BurgerDecorator(Burger* burger) : Burger("", "", 0, 0), decoratedBurger(burger) {}
+
+    string eating() override {
+        return decoratedBurger->eating();
+    }
+
+    double getPrice() const override {
+        return decoratedBurger->getPrice();
+    }
+};
+
+class CheeseDecorator : public BurgerDecorator {
+public:
+    CheeseDecorator(Burger* burger) : BurgerDecorator(burger) {}
+
+    string eating() override {
+        return BurgerDecorator::eating() + ", cheese";
+    }
+
+    double getPrice() const override {
+        return BurgerDecorator::getPrice() + 1.5;
+    }
+};
+
+class BaconDecorator : public BurgerDecorator {
+public:
+    BaconDecorator(Burger* burger) : BurgerDecorator(burger) {}
+
+    string eating() override {
+        return BurgerDecorator::eating() + ", bacon";
+    }
+
+    double getPrice() const override {
+        return BurgerDecorator::getPrice() + 2.0;
+    }
+};
+
+class SauceDecorator : public BurgerDecorator {
+public:
+    SauceDecorator(Burger* burger) : BurgerDecorator(burger) {}
+
+    string eating() override {
+        return BurgerDecorator::eating() + ", sauce";
+    }
+
+    double getPrice() const override {
+        return BurgerDecorator::getPrice() + 0.5;
+    }
+};
+
+class BurgerBuilder {
+private:
+    string size = "";
+    string type = "";
+    int amount = 0;
+    double basePrice = 5.0;
+
+public:
+    BurgerBuilder& setSize(string s) {
+        size = s;
+        return *this;
+    }
+
+    BurgerBuilder& setType(string t) {
+        type = t;
+        return *this;
+    }
+
+    BurgerBuilder& setAmount(int a) {
+        amount = a;
+        return *this;
+    }
+
+    Burger* build() {
+        return new Burger(size, type, amount, basePrice);
+    }
+};
+
+int main() {
+    Burger* basicBurger = BurgerBuilder()
+        .setSize("Big")
+        .setType("Fishburger")
+        .setAmount(600)
+        .build();
+
+    cout << "Basic burger:" << endl;
+    basicBurger->show();
+    cout << "Eating: " << basicBurger->eating() << endl << endl;
+
+    Burger* burgerWithCheese = new CheeseDecorator(basicBurger);
+    Burger* burgerWithCheeseAndBacon = new BaconDecorator(burgerWithCheese);
+    Burger* finalBurger = new SauceDecorator(burgerWithCheeseAndBacon);
+
+    cout << "Final burger with all toppings:" << endl;
+    finalBurger->show();
+    cout << "Eating: " << finalBurger->eating() << endl;
+
+    delete finalBurger;
+
+    return 0;
+}
