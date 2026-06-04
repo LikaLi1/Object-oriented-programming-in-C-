@@ -285,3 +285,114 @@ int main()
 
     return 0;
 }
+
+
+#include <iostream>
+using namespace std;
+
+class Renderer
+{
+public:
+    virtual void renderCircle(int radius) = 0;
+    virtual void renderRectangle(int width, int height) = 0;
+    virtual void openGlRender(const string& text) = 0;
+    virtual ~Renderer() {}
+};
+
+class RasterRenderer : public Renderer
+{
+public:
+    void renderCircle(int radius) override
+    {
+        cout << "Drawing circle; Radius: " << radius << endl;
+    }
+    void renderRectangle(int width, int height) override
+    {
+        cout << "Drawing rectangle; Width: " << width << ", Height: " << height << endl;
+    }
+    void openGlRender(const string& text) override
+    {
+        cout << "OpenGL raster render: " << text << endl;
+    }
+};
+
+class VectorRenderer : public Renderer
+{
+public:
+    void renderCircle(int radius) override
+    {
+        cout << "Drawing circle; Radius: " << radius << " (vector)" << endl;
+    }
+    void renderRectangle(int width, int height) override
+    {
+        cout << "Drawing rectangle; Width: " << width << ", Height: " << height << " (vector)" << endl;
+    }
+    void openGlRender(const string& text) override
+    {
+        cout << "OpenGL vector render: " << text << endl;
+    }
+};
+
+class Shape
+{
+protected:
+    Renderer* renderer;
+
+public:
+    Shape(Renderer* r) : renderer(r) {}
+    virtual void draw() = 0;
+    void setRenderer(Renderer* r)
+    {
+        renderer = r;
+    }
+    virtual ~Shape() {}
+};
+
+class Circle : public Shape
+{
+private:
+    int radius;
+    string text;
+
+public:
+    Circle(Renderer* r, int rad, const string& t) : Shape(r), radius(rad), text(t) {}
+    void draw() override
+    {
+        renderer->renderCircle(radius);
+        renderer->openGlRender(text);
+    }
+};
+
+class Rectangle : public Shape
+{
+private:
+    int width;
+    int height;
+    string text;
+
+public:
+    Rectangle(Renderer* r, int w, int h, const string& t) : Shape(r), width(w), height(h), text(t) {}
+    void draw() override
+    {
+        renderer->renderRectangle(width, height);
+        renderer->openGlRender(text);
+    }
+};
+
+int main()
+{
+    RasterRenderer raster;
+    VectorRenderer vector;
+
+    Circle c1(&raster, 10, "Raster");
+    Circle c2(&vector, 10, "Vector");
+    Rectangle r1(&raster, 20, 10, "Raster");
+    Rectangle r2(&vector, 20, 10, "Vector");
+
+    c1.draw();
+    r1.draw();
+    c2.draw();
+    r2.draw();
+
+    return 0;
+}
