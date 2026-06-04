@@ -183,3 +183,105 @@ int main()
 
     return 0;
 }
+
+
+#include <iostream>
+using namespace std;
+
+class Renderer
+{
+public:
+    virtual void renderCircle(int radius) = 0;
+    virtual void renderRectangle(int width, int height) = 0;
+    virtual ~Renderer() {}
+};
+
+class RasterRenderer : public Renderer
+{
+public:
+    void renderCircle(int radius) override
+    {
+        cout << "Drawing circle; Radius: " << radius << endl;
+    }
+    void renderRectangle(int width, int height) override
+    {
+        cout << "Drawing rectangle; Width: " << width << ", Height: " << height << endl;
+    }
+};
+
+class VectorRenderer : public Renderer
+{
+public:
+    void renderCircle(int radius) override
+    {
+        cout << "Drawing circle; Radius: " << radius << " (vector)" << endl;
+    }
+    void renderRectangle(int width, int height) override
+    {
+        cout << "Drawing rectangle; Width: " << width << ", Height: " << height << " (vector)" << endl;
+    }
+};
+
+class Shape
+{
+protected:
+    Renderer* renderer;
+
+public:
+    Shape(Renderer* r) : renderer(r) {}
+    virtual void draw() = 0;
+
+    void setRenderer(Renderer* r)
+    {
+        renderer = r;
+    }
+
+    virtual ~Shape() {}
+};
+
+class Circle : public Shape
+{
+private:
+    int radius;
+
+public:
+    Circle(Renderer* r, int rad) : Shape(r), radius(rad) {}
+    void draw() override
+    {
+        renderer->renderCircle(radius);
+    }
+};
+
+class Rectangle : public Shape
+{
+private:
+    int width;
+    int height;
+
+public:
+    Rectangle(Renderer* r, int w, int h) : Shape(r), width(w), height(h) {}
+    void draw() override
+    {
+        renderer->renderRectangle(width, height);
+    }
+};
+
+int main()
+{
+    RasterRenderer raster;
+    VectorRenderer vector;
+
+    Circle c(&raster, 10);
+    Rectangle r(&raster, 20, 10);
+
+    c.draw();
+    r.draw();
+
+    c.setRenderer(&vector);
+    c.draw();
+
+    r.setRenderer(&vector);
+    r.draw();
+
+    return 0;
+}
