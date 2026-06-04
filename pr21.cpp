@@ -396,3 +396,132 @@ int main()
 
     return 0;
 }
+
+
+#include <iostream>
+using namespace std;
+
+class Device
+{
+public:
+    virtual void turnOn() = 0;
+    virtual void turnOff() = 0;
+    virtual void setValume(int value) = 0;
+    virtual ~Device() {}
+};
+
+class TV : public Device
+{
+public:
+    void turnOn() override
+    {
+        cout << "TV turn on" << endl;
+    }
+    void turnOff() override
+    {
+        cout << "TV turn off" << endl;
+    }
+    void setValume(int value) override
+    {
+        cout << "TV value: " << value << endl;
+    }
+};
+
+class Projector : public Device
+{
+public:
+    void turnOn() override
+    {
+        cout << "Projector turn on" << endl;
+    }
+    void turnOff() override
+    {
+        cout << "Projector turn off" << endl;
+    }
+    void setValume(int value) override
+    {
+        cout << "Projector value: " << value << endl;
+    }
+};
+
+class Radio : public Device
+{
+public:
+    void turnOn() override
+    {
+        cout << "Radio turn on" << endl;
+    }
+    void turnOff() override
+    {
+        cout << "Radio turn off" << endl;
+    }
+    void setValume(int value) override
+    {
+        cout << "Radio value: " << value << endl;
+    }
+};
+
+class Remote
+{
+protected:
+    Device* device;
+
+public:
+    Remote(Device* d) : device(d) {}
+    virtual void powerOn() 
+    {
+        device->turnOn();
+    }
+    virtual void powerOff()
+    {
+        device->turnOff();
+    }
+    virtual ~Remote() {}
+};
+
+class SmartRemote : public Remote
+{
+private:
+
+public:
+    SmartRemote(Device* d) : Remote(d) {}
+    void mute()
+    {
+        device->setValume(0);
+    }
+};
+
+class VoiceRemote : public Remote
+{
+private:
+
+public:
+    VoiceRemote(Device* d) : Remote(d) {}
+    void mute()
+    {
+        device->setValume(0);
+    }
+};
+
+int main()
+{
+    TV tv;
+    Projector projector;
+    Radio radio;
+
+    SmartRemote s1(&tv);
+    SmartRemote s2(&projector);
+    SmartRemote s3(&radio);
+    VoiceRemote v1(&tv);
+    VoiceRemote v2(&projector);
+    VoiceRemote v3(&radio);
+
+    s1.mute();
+    v1.mute();
+    s2.mute();
+    v2.mute();
+    s3.mute();
+    v3.mute();
+
+    return 0;
+}
