@@ -743,3 +743,95 @@ int main()
 
     return 0;
 }
+
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Effect
+{
+public:
+    virtual void apply() = 0;
+    virtual ~Effect() {}
+};
+
+class FireEffect : public Effect
+{
+public:
+    void apply() override
+    {
+        cout << "Fire damage" << endl;
+    }
+};
+
+class IceEffect : public Effect
+{
+public:
+    void apply() override
+    {
+        cout << "Ice damage" << endl;
+    }
+};
+
+class PoisonEffect : public Effect
+{
+public:
+    void apply() override
+    {
+        cout << "Poison damage" << endl;
+    }
+};
+
+class Sword
+{
+protected:
+    Effect* effect;
+
+public:
+    Sword(Effect* s) : effect(s) {}
+
+    virtual void attack()
+    {
+        effect->apply();
+    }
+
+    virtual ~Sword() {}
+};
+
+class Bow : public Sword
+{
+public:
+    Bow(Effect* s) : Sword(s) {}
+    void attack() override
+    {
+        effect->apply();
+    }
+};
+
+class Staff : public Sword
+{
+public:
+    Staff(Effect* s) : Sword(s) {}
+    void attack() override
+    {
+        effect->apply();
+    }
+};
+
+int main()
+{
+    FireEffect fireEffect;
+    IceEffect iceEffect;
+    PoisonEffect poisonEffect;
+
+    Sword n1(&fireEffect);
+    Bow n2(&iceEffect);
+    Staff n3(&poisonEffect);
+
+    n1.attack();
+    n2.attack();
+    n3.attack();
+
+    return 0;
+}
