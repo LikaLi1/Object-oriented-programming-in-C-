@@ -1111,3 +1111,95 @@ int main()
 
     return 0;
 }
+
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+class RegularPayment
+{
+public:
+    virtual void keep() = 0;
+    virtual ~RegularPayment() {}
+};
+
+class SubscriptionPayment : public RegularPayment
+{
+public:
+    void keep() override
+    {
+        cout << "SubscriptionPayment " << endl;
+    }
+};
+
+class Model : public RegularPayment
+{
+public:
+    void keep() override
+    {
+        cout << "Model" << endl;
+    }
+};
+
+class UIElement : public RegularPayment
+{
+public:
+    void keep() override
+    {
+        cout << "UIElement" << endl;
+    }
+};
+
+class OpenGLRenderer
+{
+protected:
+    RegularPayment* regularPayment;
+
+public:
+    OpenGLRenderer(RegularPayment* s) : regularPayment(s) {}
+
+    virtual void distribute()
+    {
+        regularPayment->keep();
+    }
+
+    virtual ~OpenGLRenderer() {}
+};
+
+class VulkanRenderer : public OpenGLRenderer
+{
+public:
+    VulkanRenderer(RegularPayment* s) : OpenGLRenderer(s) {}
+    void distribute() override
+    {
+        regularPayment->keep();
+    }
+};
+
+class DirectXRenderer : public OpenGLRenderer
+{
+public:
+    DirectXRenderer(RegularPayment* s) : OpenGLRenderer(s) {}
+    void distribute() override
+    {
+        regularPayment->keep();
+    }
+};
+
+int main()
+{
+    Sprite sprite;
+    Model model;
+    UIElement uielement;
+
+    OpenGLRenderer n1(&sprite);
+    VulkanRenderer  n2(&model);
+    DirectXRenderer n3(&uielement);
+
+    n1.distribute();
+    n2.distribute();
+    n3.distribute();
+
+    return 0;
+}
