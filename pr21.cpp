@@ -1019,3 +1019,95 @@ int main()
 
     return 0;
 }
+
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Storage
+{
+public:
+    virtual void keep() = 0;
+    virtual ~Storage() {}
+};
+
+class Sprite : public Storage
+{
+public:
+    void keep() override
+    {
+        cout << "Sprite" << endl;
+    }
+};
+
+class Model : public Storage
+{
+public:
+    void keep() override
+    {
+        cout << "Model" << endl;
+    }
+};
+
+class UIElement : public Storage
+{
+public:
+    void keep() override
+    {
+        cout << "UIElement" << endl;
+    }
+};
+
+class OpenGLRenderer
+{
+protected:
+    Storage* storage;
+
+public:
+    OpenGLRenderer(Storage* s) : storage(s) {}
+
+    virtual void distribute()
+    {
+        storage->keep();
+    }
+
+    virtual ~OpenGLRenderer() {}
+};
+
+class VulkanRenderer : public OpenGLRenderer
+{
+public:
+    VulkanRenderer(Storage* s) : OpenGLRenderer(s) {}
+    void distribute() override
+    {
+        storage->keep();
+    }
+};
+
+class DirectXRenderer : public OpenGLRenderer
+{
+public:
+    DirectXRenderer(Storage* s) : OpenGLRenderer(s) {}
+    void distribute() override
+    {
+        storage->keep();
+    }
+};
+
+int main()
+{
+    Sprite sprite;
+    Model model;
+    UIElement uielement;
+
+    OpenGLRenderer n1(&sprite);
+    VulkanRenderer  n2(&model);
+    DirectXRenderer n3(&uielement);
+
+    n1.distribute();
+    n2.distribute();
+    n3.distribute();
+
+    return 0;
+}
