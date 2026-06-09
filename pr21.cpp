@@ -654,3 +654,92 @@ int main()
 
     return 0;
 }
+
+
+#include <iostream>
+using namespace std;
+
+class Sender
+{
+public:
+    virtual void send(string text) = 0;
+    virtual ~Sender() {}
+};
+
+class EmailSender : public Sender
+{
+public:
+    void send(string text) override
+    {
+        cout << "Email: " << text << endl;
+    }
+};
+
+class SMSSender : public Sender
+{
+public:
+    void send(string text) override
+    {
+        cout << "SMS: " << text << endl;
+    }
+};
+
+class PushSender : public Sender
+{
+public:
+    void send(string text) override
+    {
+        cout << "Push: " << text << endl;
+    }
+};
+
+class Notification
+{
+protected:
+    Sender* sender;
+
+public:
+    Notification(Sender* s) : sender(s) {}
+    virtual void notify(string text)
+    {
+        sender->send(text);
+    }
+    virtual ~Notification() {}
+};
+
+class UrgentNotification : public Notification
+{
+public:
+    UrgentNotification(Sender* s) : Notification(s) {}
+    void notify(string text) override
+    {
+        sender->send("Urgent: " + text);
+    }
+};
+
+class MarketingNotification : public Notification
+{
+public:
+    MarketingNotification(Sender* s) : Notification(s) {}
+    void notify(string text) override
+    {
+        sender->send("Marketing: " + text);
+    }
+};
+
+int main()
+{
+    EmailSender emailSender;
+    SMSSender smsSender;
+    PushSender pushSender;
+
+    Notification n1(&emailSender);
+    UrgentNotification n2(&smsSender);
+    MarketingNotification n3(&pushSender);
+
+    n1.notify("Your email message");
+    n2.notify("Your urgent SMS");
+    n3.notify("New marketing offer");
+
+    return 0;
+}
