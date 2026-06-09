@@ -927,3 +927,95 @@ int main()
 
     return 0;
 }
+
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Storage
+{
+public:
+    virtual void keep() = 0;
+    virtual ~Storage() {}
+};
+
+class MySQLDriver : public Storage
+{
+public:
+    void keep() override
+    {
+        cout << "MySQLDriver" << endl;
+    }
+};
+
+class PostgreSQLDriver : public Storage
+{
+public:
+    void keep() override
+    {
+        cout << "PostgreSQLDriver" << endl;
+    }
+};
+
+class SQLiteDriver : public Storage
+{
+public:
+    void keep() override
+    {
+        cout << "SQLiteDriver" << endl;
+    }
+};
+
+class TextFile
+{
+protected:
+    Storage* storage;
+
+public:
+    TextFile(Storage* s) : storage(s) {}
+
+    virtual void distribute()
+    {
+        storage->keep();
+    }
+
+    virtual ~TextFile() {}
+};
+
+class ImageFile : public TextFile
+{
+public:
+    ImageFile(Storage* s) : TextFile(s) {}
+    void distribute() override
+    {
+        storage->keep();
+    }
+};
+
+class VideoFile : public TextFile
+{
+public:
+    VideoFile(Storage* s) : TextFile(s) {}
+    void distribute() override
+    {
+        storage->keep();
+    }
+};
+
+int main()
+{
+    MySQLDriver mySQLDriver;
+    PostgreSQLDriver postgreSQLDriver;
+    SQLiteDriver sqLiteDriver;
+
+    TextFile n1(&mySQLDriver);
+    ImageFile  n2(&postgreSQLDriver);
+    VideoFile n3(&sqLiteDriver);
+
+    n1.distribute();
+    n2.distribute();
+    n3.distribute();
+
+    return 0;
+}
