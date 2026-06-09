@@ -835,3 +835,95 @@ int main()
 
     return 0;
 }
+
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+class DatabaseDriver
+{
+public:
+    virtual void apply() = 0;
+    virtual ~DatabaseDriver() {}
+};
+
+class MySQLDriver : public DatabaseDriver
+{
+public:
+    void apply() override
+    {
+        cout << "MySQLDriver" << endl;
+    }
+};
+
+class PostgreSQLDriver : public DatabaseDriver
+{
+public:
+    void apply() override
+    {
+        cout << "PostgreSQLDriver" << endl;
+    }
+};
+
+class SQLiteDriver : public DatabaseDriver
+{
+public:
+    void apply() override
+    {
+        cout << "SQLiteDriver" << endl;
+    }
+};
+
+class Repository
+{
+protected:
+    DatabaseDriver* databaseDriver;
+
+public:
+    Repository(DatabaseDriver* s) : databaseDriver(s) {}
+
+    virtual void attack()
+    {
+        databaseDriver->apply();
+    }
+
+    virtual ~Repository() {}
+};
+
+class UserRepository : public Repository
+{
+public:
+    UserRepository(DatabaseDriver* s) : Repository(s) {}
+    void attack() override
+    {
+        databaseDriver->apply();
+    }
+};
+
+class ProductRepository : public Repository
+{
+public:
+    ProductRepository(DatabaseDriver* s) : Repository(s) {}
+    void attack() override
+    {
+        databaseDriver->apply();
+    }
+};
+
+int main()
+{
+    MySQLDriver mySQLDriver;
+    PostgreSQLDriver postgreSQLDriver;
+    SQLiteDriver sqLiteDriver;
+
+    Repository n1(&mySQLDriver);
+    UserRepository n2(&postgreSQLDriver);
+    ProductRepository n3(&sqLiteDriver);
+
+    n1.attack();
+    n2.attack();
+    n3.attack();
+
+    return 0;
+}
